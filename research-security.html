@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>安全预测｜中文版</title>
+<style>
+:root{--accent:#5fb37a;--bg:#0e0e10;--fg:#e8e6e0;--muted:#9a9a9a;--rule:#2a2a2e;--card:#17171a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.85;font-size:17px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.topnav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 24px;background:#0b0b0d;border-bottom:1px solid var(--rule)}
+.nav-brand{font-weight:700;font-size:18px;color:var(--fg)}
+.nav-brand b{color:var(--accent)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.nav-link{color:var(--muted);padding:6px 12px;border-radius:7px;font-size:13.5px;font-weight:600;cursor:pointer}
+.nav-link:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.nav-link.active{color:var(--accent);background:var(--card)}
+.nav-dd{position:relative;display:inline-block}
+.nav-dd-menu{display:none;position:absolute;top:100%;left:0;background:#15151a;border:1px solid var(--rule);border-radius:9px;padding:6px;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.nav-dd:hover .nav-dd-menu{display:block}
+.nav-dd-menu a{display:block;color:var(--muted);padding:7px 12px;border-radius:6px;font-size:13px}
+.nav-dd-menu a:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.layout{display:grid;grid-template-columns:260px 1fr;max-width:1180px;margin:0 auto}
+.sidebar{position:sticky;top:57px;align-self:start;max-height:calc(100vh - 57px);overflow-y:auto;padding:28px 18px;border-right:1px solid var(--rule);font-size:13px}
+.sidebar .brand{font-weight:700;font-size:16px;color:var(--fg);margin-bottom:4px}
+.sidebar .brand b{color:var(--accent)}
+.sidebar .sub{color:var(--muted);margin-bottom:20px;font-size:12px}
+.toc-item{display:block;color:var(--muted);padding:5px 8px;border-radius:6px;margin-bottom:2px;line-height:1.4}
+.toc-item:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.content{padding:44px 64px;max-width:820px}
+.pagehead{border-bottom:1px solid var(--rule);padding-bottom:28px;margin-bottom:36px}
+.pagehead h1{font-size:44px;margin:0 0 8px;letter-spacing:1px}
+.pagehead h1 b{color:var(--accent)}
+.pagehead .meta{color:var(--muted);font-size:14px}
+.pagehead .authors{color:var(--muted);font-size:14px;margin-top:10px}
+h2.chap{font-size:26px;margin:52px 0 18px;padding-top:14px;border-top:1px solid var(--rule);color:var(--fg)}
+h3.chap{font-size:20px;margin:34px 0 12px;color:var(--fg)}
+p{margin:16px 0}
+ul{margin:16px 0;padding-left:22px}
+li{margin:8px 0}
+blockquote{border-left:3px solid var(--accent);margin:20px 0;padding:6px 18px;color:var(--muted);background:var(--card)}
+.tablewrap{overflow-x:auto;margin:24px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border:1px solid var(--rule);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:var(--card);color:var(--accent)}
+.endings{margin:64px 0 20px;padding-top:20px}
+.ending-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.ending-card{display:block;padding:24px;border-radius:12px;background:var(--card);border:1px solid var(--rule);transition:.15s}
+.ending-card:hover{text-decoration:none;transform:translateY(-3px)}
+.ending-card.slowdown{border-color:#3a9bdc}
+.ending-card.race{border-color:#d6453d}
+.ec-label{font-size:20px;font-weight:700;color:var(--fg);margin-bottom:8px}
+.ending-card.slowdown .ec-label{color:#3a9bdc}
+.ending-card.race .ec-label{color:#d6453d}
+.ec-desc{color:var(--muted);font-size:14px;margin-bottom:14px}
+.ec-go{font-size:14px;font-weight:600}
+.ending-card.slowdown .ec-go{color:#3a9bdc}
+.ending-card.race .ec-go{color:#d6453d}
+.backlink{display:inline-block;margin-bottom:24px;font-size:14px}
+.footer{border-top:1px solid var(--rule);margin-top:64px;padding:28px 0;color:var(--muted);font-size:13px}
+.footer a{color:var(--muted)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.content{padding:28px 18px}.ending-cards{grid-template-columns:1fr}.pagehead h1{font-size:30px}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="nav-brand" href="index.html">AI <b>2027</b></a>
+  <div class="nav-links"><a class="nav-link" href="index.html">首页</a><a class="nav-link" href="summary.html">摘要</a><a class="nav-link" href="race.html">竞速结局</a><a class="nav-link" href="slowdown.html">放缓结局</a><a class="nav-link" href="research.html">补充材料</a><a class="nav-link" href="footnotes.html">脚注</a><a class="nav-link" href="about.html">关于</a><span class="nav-dd"><span class="nav-link">研究预测 ▾</span><span class="nav-dd-menu"><a href="research-compute.html">算力预测</a><a href="research-timelines.html">时间线预测</a><a href="research-takeoff.html">起飞预测</a><a href="research-ai-goals.html">AI 目标预测</a><a href="research-security.html">安全预测</a></span></span></div>
+</nav>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="brand">AI <b>2027</b></div>
+    <div class="sub">中文全文版</div>
+    <a href="#sec-0" class="toc-item">Romeo Dean | 2025年4月</a>
+<a href="#sec-4" class="toc-item">第1节 安全等级</a>
+<a href="#sec-8" class="toc-item">第2节 网络战与破坏</a>
+<a href="#sec-12" class="toc-item">第3节 失控：颠覆与自我外泄</a>
+<a href="#sec-15" class="toc-item">第1节 安全等级</a>
+<a href="#sec-16" class="toc-item">RAND 的安全等级</a>
+<a href="#sec-18" class="toc-item">模型权重外泄</a>
+<a href="#sec-27" class="toc-item">算法机密</a>
+<a href="#sec-36" class="toc-item">间谍活动与策反</a>
+<a href="#sec-41" class="toc-item">第2节 网络战与破坏</a>
+<a href="#sec-42" class="toc-item">AI 黑客攻击能力</a>
+<a href="#sec-48" class="toc-item">破坏</a>
+<a href="#sec-55" class="toc-item">第3节 失控：颠覆与自我外泄</a>
+<a href="#sec-61" class="toc-item">附录</a>
+<a href="#sec-62" class="toc-item">第1节原始数据</a>
+<a href="#sec-68" class="toc-item">第2节原始数据</a>
+<a href="#sec-71" class="toc-item">第3节原始数据</a>
+<a href="#sec-73" class="toc-item">安全研讨会投票原始数据</a>
+  </nav>
+  <main class="content">
+    <div class="pagehead">
+      <h1>安全预测</h1>
+      <div class="meta">Security Forecast · 补充研究</div>
+      
+    </div>
+    <h3 id="sec-0" class="chap">Romeo Dean | 2025年4月</h3>
+<p>图1：AI 2027 中预测的安全等级时间线概览。我们扩展了 RAND 对安全等级的定义，以区分模型权重安全与算法机密安全。OpenBrain 和 DeepCent 是我们用来指代美国和中国领先 AI 公司的化名。</p>
+<p>AI 2027 中的许多重要事件和动态都需要对信息安全与网络安全相关问题做出有依据的预测。本补充材料解释并论证了我们对以下几方面的预期：美国和中国领先 AI 项目的安全等级（第1节）、AI 在黑客攻击与网络战方面的能力（第2节），以及 AI 试图获得对自身服务器 root 控制权的成功可能性（第3节）。若干预测部分参考了在 AI 安全研讨会上对安全专业人士的匿名投票。当然，许多预测存在高度不确定性，我们欢迎针对我们的数字和估计提出有理有据的不同意见，以改进我们的预测。本文档中的所有推算都按情景的『竞速』分支论证至2027年12月。</p>
+<h4 id="sec-4" class="chap">第1节 安全等级</h4>
+<p>我们扩展了 RAND 对安全等级1至5（SL1 - SL5）的定义，以区分保护模型权重免遭窃取的安全（WSL1 - WSL5）和保护算法机密免遭窃取的安全（SSL1 - SSL5）。</p>
+<p>我们将权重安全等级（WSL）1至5定义为：能够稳健地防御相应作战能力（依 RAND 定义）在2个月内专门窃取前沿 AI 模型权重的企图。我们将机密安全等级（SSL）1至5定义为：能够稳健地防御一次 OCX 窃取近期算法洞见的企图。具体而言，即防御窃取上个月按（最有用程度）排序的最重要10KB（明文）信息中的10%（可能包括代码或自然语言）。我们将特权访问员工定义为：获授权访问过去30天内按（最有用程度）排序的最重要20KB（明文）敏感信息之10%以上的员工。我们将被策反员工定义为特权访问员工中的一个子集，他们作为间谍或因某种胁迫，正主动向对立方泄露敏感信息。</p>
+<p>图2：我们对模型权重安全等级与算法机密安全等级预测时间线的概览。OpenBrain 和 DeepCent 是我们用来指代美国和中国领先 AI 公司的化名。</p>
+<h4 id="sec-8" class="chap">第2节 网络战与破坏</h4>
+<p>Cybench 是一个包含40道夺旗（CTF）题目的合集，取自4场专业级 CTF 竞赛，难度跨度很广。我们下面的预测允许 AI 最多提交10次尝试（带反馈的 PASS@10），但 AI 必须在与人类成本相当的条件下完成这些任务。</p>
+<p>我们将黑客攻击时程定义为时间段 T：AI 能够完成50%的黑客攻击任务，而这些任务需要一支顶尖专业5人团队用 T 时间才能完成。我们还定义了一个但愿直观的术语——时程为 T 的顶尖黑客当量：即一支顶尖专业网络安全专家团队的规模，该团队在更便宜或更快地完成需其用 T 时间完成的95%任务方面可被一个 AI 替代。我们将破坏成功率定义为：一方反事实地阻止另一方 AI 研究进展倍增数从一个周期到下一个周期增长的百分比。</p>
+<p>ai-2027.com 图3：我们估计并预测的 Cybench 分数与黑客攻击时程。Cybench 分数是指最好的内部 AI 模型在与人类成本相当条件下、限提交10次（带真实二元反馈，即 PASS@10）评测时所能达到的成绩。我们预期内部分数会领先于公开分数。黑客攻击时程是相对于 Cybench 分数建模的，并试图考虑到 CTF 题目远比一般的现实世界黑客任务更容易这一事实。</p>
+<h4 id="sec-12" class="chap">第3节 失控：颠覆与自我外泄</h4>
+<p>若 AI 获得足够的计算资源控制权，能够运行不受监控的工作负载，而人类对此毫不知情、或除非彻底关闭计算机否则无法重新夺回控制权，则实现了部分颠覆。若 AI 获得对整个被隔离的计算资源集群的控制权，包括其开关机的控制，以至于人类若要关闭这些计算机就需要进行物理改动，则实现了完全颠覆。最后，我们还将自我外泄定义为：AI 能够将自身复制一份，运行在人类监管者本意让其留守的建筑内服务器之外的任何形式存储上。</p>
+<p>ai-2027.com 图4：我们对 OpenBrain 和 DeepCent 最好的内部 AI 模型在2027年前部分颠覆、完全颠覆和自我外泄成功概率的估计与预测。注意，到2027年12月，OpenBrain 最好的模型（Agent-5）已能将 AI 研发加速1000倍。</p>
+<h2 id="sec-15" class="chap">第1节 安全等级</h2>
+<h4 id="sec-16" class="chap">RAND 的安全等级</h4>
+<div class="tablewrap"><table><tr><th>等级</th><th>作战能力</th><th>安全等级</th><th>说明</th></tr><tr><td>1</td><td>OC1：业余尝试</td><td>SL1</td><td>由业余爱好者黑客或非定向的『广撒网』攻击实施的行动。预算不超过 $1,000，历时数天，无既有基础设施或组织访问权限。</td></tr><tr><td>2</td><td>OC2：专业机会主义行动</td><td>SL2</td><td>由单个专业黑客或有能力的黑客团伙实施非定向/较低优先级攻击的行动。预算不超过 $10,000，历时数周，拥有个人网络基础设施但无组织访问权限。</td></tr><tr><td>3</td><td>OC3：网络犯罪集团与内部威胁</td><td>SL3</td><td>由世界知名的犯罪黑客团伙、恐怖组织、心怀不满的员工和工业间谍组织实施的行动。预算不超过 $1 million，历时数月，拥有大量既有基础设施或内部访问权限。约10名经验丰富的专业人员组成的团队。</td></tr><tr><td>4</td><td>OC4：领先网络能力机构的标准行动</td><td>SL4</td><td>由国家支持的团体和外国情报机构实施的行动。预算不超过 $10 million，历时一年之久，拥有庞大的基础设施和国家资源。约100名各具专长的人员组成的团队。全球每年执行超过100次此类行动。</td></tr><tr><td>5</td><td>OC5：顶级网络能力机构的最高优先级行动</td><td>SL5</td><td>由世界上能力最强的民族国家实施的行动。预算不超过 $1 billion，历时多年，拥有历经数十年发展的国家级基础设施。约1,000名专业水平领先公开最先进技术数年的人员组成的团队。</td></tr></table></div>
+<h3 id="sec-18" class="chap">模型权重外泄</h3>
+<div class="tablewrap"><table><tr><th>等级</th><th>权重安全等级（WSL）</th><th>作战能力（OC）</th></tr><tr><td>1</td><td>WSL1：稳健防御（95%概率）OC1 在2个月内窃取前沿 AI 模型权重的企图。</td><td>OC1：业余尝试。业余爱好者黑客、『广撒网』攻击。预算不超过 $1,000，历时数天，无既有基础设施或组织访问权限。</td></tr><tr><td>2</td><td>WSL2：稳健防御（95%概率）OC2 在2个月内窃取前沿 AI 模型权重的企图。</td><td>OC2：专业机会主义行动。实施非定向攻击的单个专业黑客或黑客团伙。预算不超过 $10,000，历时数周，拥有个人网络基础设施但无组织访问权限。</td></tr><tr><td>3</td><td>WSL3：稳健防御（95%概率）OC3 在2个月内窃取前沿 AI 模型权重的企图。</td><td>OC3：网络犯罪集团与内部威胁。犯罪黑客团伙、恐怖组织、心怀不满的员工、工业间谍。预算不超过 $1 million，历时数月，拥有大量基础设施或内部访问权限。具备一定的策反内部人员的能力。</td></tr><tr><td>4</td><td>WSL4：稳健防御（95%概率）OC4 在2个月内窃取前沿 AI 模型权重的企图。</td><td>OC4：领先网络能力机构的标准行动。国家支持的团体和情报机构。预算不超过 $10 million，历时一年之久，拥有庞大的基础设施和国家资源。策反内部人员的能力更强。</td></tr><tr><td>5</td><td>WSL5：稳健防御（95%概率）OC5 在2个月内窃取前沿 AI 模型权重的企图。</td><td>OC5：顶级网络能力机构的最高优先级行动。世界上能力最强的民族国家。预算不超过 $1 billion，历时多年，拥有历经数十年发展的国家级基础设施。策反内部人员的能力最强。</td></tr></table></div>
+<p>图5：我们对模型权重安全等级预测时间线的概览。ai-2027.com 图6：关于某国家行为体是否会在2030年前窃取一款前沿美国 AI 模型这一问题呈现出强烈共识——这是当前安全等级远不足以抵御国家级行为体威胁的一个信号。</p>
+<p>不久前美国的前沿 AI 公司还只有初创公司级别的安全水平，而达到 WSL3 尤其具有挑战性，因为内部威胁（OC3）很难防御。2024年12月，OpenAI 和 Anthropic 等美国领先 AI 公司都还是初创公司，虽在提升安全方面已有值得注意的努力但仍处早期阶段。假设其当前约有一定比例的员工作为日常研究的一部分能够接触模型权重，且其安全措施的关键方面很可能依赖 NVIDIA 的机密计算等协议，我们预计其内部威胁缓解措施仍将它们保持在 WSL2 标准。像 Google 这样更成熟的科技公司在前沿权重上可能处于 WSL3。</p>
+<p>2025年，中国和美国的前沿公司都没有强烈动机去提升安全。在中国，DeepSeek 处于前沿，鉴于其开源和快速跟随的做法，我们预计中国领先公司在2026年之前不会在安全上投入太多。此外，鉴于 DeepSeek 现已将开源前沿推进到接近美国领先公司的水平，我们预计整个2025年安全性都不会是优先事项，而美国领先 AI 公司仍将发现允许员工广泛访问模型权重带来的收益更大，以至于它们在2026年之前一直保持在 WSL2。</p>
+<p>实施 WSL3 的主要挑战（笼统地说）在于限制离开数据中心的高带宽互联网连接，2026年美中两国公司都开始有动机去实施这一点。就美国公司而言，我们预计模型的通用能力将达到 AI 研究加速能力（及其他方面）等敏感水平，而它们相对中国前沿的领先（按日历时间仍约6个月）如今变得更加重要。这一 AI 研究加速上的能力领先具有复利效应，因此应能给 AI 公司提供足够动机去加固安全以达到 SL3。我们另外预测，中国将在2026年年中前后开始把其 AI 公司整合为单一的国家 AI 举措，届时我们认为中国也会一致地实施一项国家支持的举措来达到 WSL3，但核心原因不同——它们会特别担心美国用网络攻击破坏它们的国家 AI 举措。</p>
+<p>______________</p>
+<p>我们建模认为，中国在2027年初成功实施了对美国最先进模型（Agent-2）的一次权重外泄企图，促使 OpenBrain 实施 WSL4。</p>
+<p>在2027年，即便 AI 已达到超人类的网络安全能力、模型权重变得更大（使窃取更困难），我们仍建模认为，一项最高优先级的政府举措（部分是回应中国的权重窃取）在美中两国从 WSL3 达到 WSL5 各约需12个月。实现能抵御国家级行为体的安全尤其具有挑战性，私营公司很可能需要大量政府支持和资源来协助达成。当中国窃取前沿美国权重时，我们预计美国政府会在一个月内察觉，这（连同日益诱人的 AI 能力）部分促使其介入并帮助美国领先 AI 公司加强安全。中国略占优势，因为其2026年年中的 AI 研究集中化举措使其在政府支持的安全方面抢占了先机，而整个2027年它对美国网络攻击（因美国拥有能力日增的 AI 网络代理）的高度恐惧促使其更激进地优先考虑安全（通过激进的分隔管理和物理隔离）。此外，到2027年年中，中国的国家 AI 举措已集中于单一的大型开发区，而美国的数据中心则分散得多。因此我们预测，中国将在2027年末比美国早几个月达到 WSL5。图7和图8所示的安全研讨会投票印证了达到 WSL5 的困难及所需的极端政府努力。ai-2027.com 图7：关于 AI 公司实施 SL5 这一问题显示出共识：很可能需要政府协助。ai-2027.com 图8：关于实施 SL5 难度这一问题显示出一定共识：很可能需要最高优先级的政府协助且耗时超过6个月。</p>
+<h3 id="sec-27" class="chap">算法机密</h3>
+<p>我们将机密安全等级（SSL）1至5定义为：能够稳健地防御一次 OCX 窃取近期算法洞见的企图。具体而言，即防御窃取上个月按（最有用程度）排序的最重要10KB（明文）信息中的10%（可能包括代码或自然语言）。</p>
+<div class="tablewrap"><table><tr><th>等级</th><th>机密安全等级（SSL）</th><th>作战能力（OC）</th></tr><tr><td>1</td><td>SSL1：稳健防御（95%概率）OC1 从上个月按排序的最重要10KB（明文）信息中外泄不超过1KB 的企图。</td><td>OC1：业余尝试。业余爱好者黑客、『广撒网』攻击。预算不超过 $1,000，历时数天，无既有基础设施或组织访问权限。</td></tr><tr><td>2</td><td>SSL2：稳健防御（95%概率）OC2 从上个月按排序的最重要10KB（明文）信息中外泄不超过1KB 的企图。</td><td>OC2：专业机会主义行动。实施非定向攻击的单个专业黑客或黑客团伙。预算不超过 $10,000，历时数周，拥有个人网络基础设施但无组织访问权限。</td></tr><tr><td>3</td><td>SSL3：稳健防御（95%概率）OC3 从上个月按排序的最重要10KB（明文）信息中外泄不超过1KB 的企图。</td><td>OC3：网络犯罪集团与内部威胁。犯罪黑客团伙、恐怖组织、心怀不满的员工、工业间谍。预算不超过 $1 million，历时数月，拥有大量基础设施或内部访问权限。具备一定的策反内部人员的能力。</td></tr><tr><td>4</td><td>SSL4：稳健防御（95%概率）OC4 从上个月按排序的最重要10KB（明文）信息中外泄不超过1KB 的企图。</td><td>OC4：领先网络能力机构的标准行动。国家支持的团体和情报机构。预算不超过 $10 million，历时一年之久，拥有庞大的基础设施和国家资源。策反内部人员的能力更强。</td></tr><tr><td>5</td><td>SSL5：稳健防御（95%概率）OC5 从上个月按排序的最重要10KB（明文）信息中外泄不超过1KB 的企图。</td><td>OC5：顶级网络能力机构的最高优先级行动。世界上能力最强的民族国家。预算不超过 $1 billion，历时多年，拥有历经数十年发展的国家级基础设施。策反内部人员的能力最强。</td></tr></table></div>
+<p>图9：我们对算法机密安全等级预测时间线的概览。</p>
+<p>防御算法机密窃取应当比防御模型权重窃取困难得多，而眼下开源前沿逼近最前列，缓解措施非常薄弱。机密外泄所需的带宽应比模型权重外泄低约一百万倍（每月1KB 对比2TB），而且它并非集中存放于数据中心服务器，而是约有1000名员工对算法洞见拥有相对广泛的访问权限，并很可能能凭记忆复现机密（这不仅与间谍活动相关，也与挖角员工尤为相关）。目前美国的前沿 AI 公司起步时都是小型科技公司，所以安全相对宽松。一次相对业余的尝试似乎很可能成功窃取到重要洞见（例如用 $5K 贿赂一名办公室清洁工，或对一名员工发起定向钓鱼攻击）。在中国，前沿是开源的。</p>
+<p>整个2026年，美国前沿 AI 公司似乎不太可能对办公室安全和员工安全的现状做出重大改变，以至于如此少量的信息也无法泄露给一次 OC3 行动（$1M 攻击预算）。事实上，防御这样一次行动需要针对内部威胁采取大量缓解措施，而每月能访问最重要10KB 信息之10%以上的员工数量，预计整个2026年约为2000人。攻击者也有若干其他途径可以在没有内部人员帮助的情况下窃取信息，比如通过纯网络的攻击（例如通过 Slack 等消息平台）或其他能进入办公室的人。</p>
+<p>在中国尚未站到算法前沿、并开始担心自己有可能真的帮助美国领先之前，它没有动机放弃开源或停止内部信息的自由流动。在我们更宏观的情景预测下，中国的内部前沿能力显著（约6个月）落后于美国，直到2027年初它窃取了模型权重。在那之前，它落后得足够多，以至于不太可能取得会帮助美国领先的算法进展，而且它很可能从公司间的内部信息共享中获益更多。因此我们预测，中国大体上在算法机密上只保持最低限度的保密（SSL2），直到它通过窃取权重大幅缩小差距、并因这加剧了与美国的竞赛而对破坏风险更为担忧为止。这促使它在2027年年中前激进地分隔和监控员工，迅速达到 SSL4。</p>
+<p>到2027年底，防御模型权重外泄给中国对美国而言在战略上变得极为重要。政府介入连同研究自动化（使前沿公司得以大力分隔其员工）在此努力中助益显著。在2027年，政府伙伴关系的加强（尤其是鉴于中国的模型权重窃取）以及 AI 带来的大规模研究自动化，很可能导致对其员工的激进分隔。我们估计，对最近一个月算法机密拥有特权访问权限的员工将减少10倍至200人，到年底进一步减少至约100人。尽管如此，这200名员工中似乎很可能（图10）至少存在一名间谍或被胁迫者（由 OC5 级行为体促成），这会使 SSL5 几乎不可能实现。我们预测，此人会在向100人过渡的过程中失去访问权限，最终极端的研究人员搬迁和物理隔离措施将在2028年经过约3-6个月的进一步努力后实现 SSL5，主要通过超人类AI 的监控和安全决策来完成。ai-2027.com 图10：关于间谍活动的这一问题有一定迹象表明美国更可能有外国间谍，甚至在200名受到严密审查的员工中存在一名间谍或被胁迫者也是有可能的。</p>
+<p>中国在2027年凭借集中化优势、更低的间谍威胁（图10）以及对破坏的偏执，一度在机密安全上短暂超越美国，但随后又因 AI 上的劣势在年末再度落后。</p>
+<h4 id="sec-36" class="chap">间谍活动与策反</h4>
+<p>算法机密窃取的一个尤为相关的助推因素是间谍活动与内部策反。本节我们详细阐述对美中领先 AI 举措中员工数量、以及其中有多少人被对方策反的具体估计。具体而言，我们将特权访问员工定义为：获授权访问过去30天内按（最有用程度）排序的最重要20KB（明文）敏感信息之10%以上的员工。我们随后将被策反员工定义为特权访问员工中的一个子集，他们作为间谍或因某种胁迫，正主动向对立方泄露敏感信息。</p>
+<p>ai-2027.com 图11：我们按公司预测的特权访问员工和被策反员工概览。</p>
+<p>我们预计美中前沿 AI 公司会在整个2026年扩充团队，然后在 AI 研究接近完全自动化、内部威胁担忧加剧时大幅削减员工。2024年，美国领先公司约有1000名员工，中国为200名。我们预计这些团队会分别显著增长2至5倍，之后安全担忧和 AI 研究自动化才使得大幅削减能访问特权信息的研究人员变得合理。我们预测，裁员与信息分隔相结合，应能使前沿公司在整个2027年将特权访问员工保持在100-300人之间，此后降至100人以下。</p>
+<p>随着国家安全关注度上升，被策反的员工比例应会在整个2026年上升，然后大体保持不变，因为策反努力激增与员工封锁两者的效应相互抵消。我们一开始假设约有0.5%的美国员工被策反（大致符合曼哈顿计划中最重要的1000名员工里的间谍基准率），在2026年达到峰值1%，之后一场封锁最终战胜了中国不断加大的努力——后者设法维持一名间谍在位直至2027年8月，正如图10所印证。对中国，我们用同一张图把策反率略微下调，使其峰值为1%，并以更早、更鹰派的员工封锁在2027年5月铲除最后一名间谍。</p>
+<h2 id="sec-41" class="chap">第2节 网络战与破坏</h2>
+<h3 id="sec-42" class="chap">AI 黑客攻击能力</h3>
+<p>ai-2027.com 图12：我们按公司预测的 Cybench 与黑客攻击时程进展概览。</p>
+<p>ai-2027.com 图13：我们按公司预测的1天和1个月顶尖黑客当量进展概览。</p>
+<p>Cybench 分数使用逻辑斯谛拟合外推（已发现基准测试往往遵循逻辑斯谛曲线）。随后我们利用 Cybench 竞赛中首次解出时间的对应关系来估计 AI 的黑客攻击时程，再从黑客攻击时程换算为顶尖人类当量，并利用与 AI 研究自动化趋势的对应关系外推这些趋势。Cybench 任务的首次解出时间（最快团队解出每道题所用时间）从2分钟到25小时不等，服从下面的分布。我们构建黑客攻击时程的定义，使其大致映射到 Cybench 的 FST，其推理是：对所有黑客任务50%的成功率，应大致映射到给定时程下对 Cybench 任务约100%的成功率，因为相比一支朝着定义不清的黑客目标推进的团队所完成的任务，CTF 题目偏向于更为明确。随后我们进一步针对『竞赛中的 CTF 题目是自行筛选为可解的』这一点做调整，预期在该时程的平均黑客任务上，平均 FST 应高出5倍（假设一支团队平均需要尝试约5种同样耗时的不同方法，才能在其中一种上成功）。总而言之，这意味着在25小时 FST 的 Cybench 题目上100%的成功率，映射到预期5小时的黑客攻击时程（对需要一支5人专家团队用5小时完成的黑客任务有50%的成功率）。</p>
+<p>图14：Cybench 难度分布。</p>
+<p>把我们的 AI 研发进展倍增数作为一项能力指标（我们假设它与黑客攻击能力高度相关），我们用 AI 研发进展倍增数的增长趋势，将黑客攻击时程外推到 Cybench 饱和之后。随后我们把黑客攻击时程（假设为5人团队）换算为原始人工小时数，再除以对应一个工作日和一个工作周的人类等效时间预算（8小时和200小时），得到用于对比的顶尖人类当量。我们认为，由于人类表现会随团队变大而下降（因为成员是按能力排序的）、且串行时间更多有其优势，团队更大也可能带来强烈的并行化或专业化优势。我们不确定如何最好地对此建模，因此假设这些效应大致相互抵消，不在5人团队基线之上调高或调低人工小时数。但愿你可以这样解读这些指标，例如：2027年8月的 OpenBrain AI 能完成一支250名黑客的顶尖团队在1个工作日内所能完成的黑客任务，或一支10名黑客的顶尖团队在一个月内所能完成的黑客任务。</p>
+<h3 id="sec-48" class="chap">破坏</h3>
+<p>我们预计，在我们的情景中，随着 AI 网络能力增长以及美中之间竞争日益激烈，双方都会有一项优先举措去破坏对方的进展。本节展示我们预期各方在拖慢对方方面能取得多大成功，衡量指标为：一方反事实地阻止另一方 AI 研究进展倍增数从一个周期到下一个周期增长的百分比。</p>
+<p>ai-2027.com 图15：这一问题探询在黑客攻击时程（Cyber-FST 采用与黑客攻击时程相同的定义）方面需要多大的能力优势才能实现约33%的拖慢。此项投票显示需要黑客攻击时程约10-50倍的优势，而这正是 OpenBrain 到2027年12月所达到的。</p>
+<p>ai-2027.com 图16：我们按公司预测的因破坏而导致的拖慢率。</p>
+<p>破坏在2026年之前并非优先事项，届时会发动一些小规模的数据投毒行动。在2027年，尤其是在中国窃取权重之后，双方对彼此的 AI 项目发动日益激进的网络攻击。起初优先隐蔽，因为植入一个持久的漏洞就能困扰对方进展数周或数月。之后，双方越来越不介意更明目张胆（反正紧张局势本就很高），但正当攻击变得更先进时，友方的网络代理也在不断想出新防御并修补漏洞。</p>
+<p>中国对安全先发制人地偏执，到2027年年中，它之所以没有在美国网络攻击下彻底转入地下，仅仅是靠极端的分隔和物理隔离。在我们的情景中，从2026年年中起，中国就对美国赢得 AI 竞赛以及网络攻击可能成为其取胜关键一环的可能性感到偏执。它们开始建设一个中央开发区，到2027年初已在将员工搬迁到这个位于（届时）其最大数据中心附近、集中办公且物理隔离的区域。该处安全极为严密，但美国 AI 仍关键性地领先到足以在12月造成40%的拖慢。</p>
+<p>美国安全起初在2027年因其去中心化而落后，但中国的网络进攻落后得更多，因为其 AI 在黑客攻击上明显更弱。到2028年，我们初步预期双方都将逼近一个偏向防御的极限。</p>
+<h2 id="sec-55" class="chap">第3节 失控：颠覆与自我外泄</h2>
+<p>我们在情景中权衡过的一种可能性是：在黑客攻击上超人类、且目标或驱动力偏离其编程者本意的 AI，可能部分或完全颠覆其运行所在数据中心的服务器。Buck Shlegeris 此前在 AI 灾难和失控部署方面的工作引入了许多此处探讨的相同概念。若 AI 获得足够的计算资源控制权，能够运行不受监控的工作负载，而人类除非彻底关闭计算机否则无法重新夺回控制权，则实现了部分颠覆。这是 Shlegeris『获得对其数据中心的 root 访问权』的一个较弱版本，此处只需获得对部分计算资源的控制即可。完全颠覆则类似于 Shlegeris 的 root 访问定义，若 AI 获得对整个计算资源集群的控制权，包括其开关机的控制，以至于人类若要关闭这些计算机就需要进行物理干预，则实现了完全颠覆。最后，我们还将自我外泄定义为：AI 将自身复制一份到人类监管者本意让其留守的地点之服务器以外的任何形式存储上。</p>
+<p>ai-2027.com 图17：这一问题探询在黑客攻击时程（Cyber-FST 采用与黑客攻击时程相同的定义）方面需要何种 AI 能力水平才能实现部分颠覆。此项投票显示需要约1年的黑客攻击时程，即约3,000小时的黑客攻击时程，而这正是 OpenBrain 在2027年10月前后所达到的，DeepCent 则在2027年12月前后达到。</p>
+<p>ai-2027.com 图18：这一问题探询在黑客攻击时程（Cyber-FST 采用与黑客攻击时程相同的定义）方面需要何种 AI 能力水平才能实现自我外泄。此项投票显示需要约1年的黑客攻击时程，即约3,000小时的黑客攻击时程，而这正是 OpenBrain 在2027年10月前后所达到的，DeepCent 则在2027年12月前后达到。</p>
+<p>ai-2027.com 图19：我们对 OpenBrain 和 DeepCent 最好的内部 AI 模型在2027年前部分颠覆、完全颠覆和自我外泄成功概率的估计与预测。注意，到2027年12月，OpenBrain 最好的模型（Agent-5）已能将 AI 研发加速1000倍。</p>
+<p>我们基于关于部分颠覆成功率的安全投票结果做出这些估计，并将成功概率下调，以计入极大的模型权重和极端安全已经落实这一事实。举例来说，我们没有按 DeepCent 2027年12月的 AI 黑客攻击时程所暗示的那样对自我外泄成功建模为50%的概率，而是鉴于 WSL5 安全已就位而下调至10%。我们仍建模认为自我外泄成功存在不可忽视的机会，因为尽管 WSL5 安全可能显著增加自我外泄的难度，AI 也可能处于数据中心内部的有利位置，得以注意到实现上的漏洞、竞态情形或其他可利用的机会，包括在人类要求它实现的安全代码中植入自己隐蔽后门的可能性——而（到 AI 在网络安全上明显超人类时）运行的安全代码可能大部分都出自它之手。</p>
+<h2 id="sec-61" class="chap">附录</h2>
+<h3 id="sec-62" class="chap">第1节原始数据</h3>
+<div class="tablewrap"><table><tr><th>连续版本</th><th>2024年12月</th><th>2025年12月</th><th>2026年12月</th><th>2027年4月</th><th>2027年8月</th><th>2027年12月</th></tr><tr><td>前沿模型权重大小（fp8）</td><td>1TB</td><td>4TB</td><td>8TB</td><td>10TB</td><td>8TB</td><td>5TB</td></tr><tr><td>所需外泄速率（TB/月）</td><td>.5</td><td>1</td><td>2.5</td><td>5</td><td>4</td><td>2.5</td></tr><tr><td>OpenBrain</td><td>WSL 2.2</td><td>WSL 2.7</td><td>WSL 3.3</td><td>WSL 3.8</td><td>WSL 4.3</td><td>WSL 5</td></tr><tr><td>DeepCent</td><td>WSL 0.5</td><td>WSL 1.2</td><td>WSL 3.4</td><td>WSL 4.2</td><td>WSL 4.6</td><td>WSL 5</td></tr></table></div>
+<div class="tablewrap"><table><tr><th></th><th>2024年12月</th><th>2025年12月</th><th>2026年12月</th><th>2027年4月</th><th>2027年8月</th><th>2027年12月</th></tr><tr><td>前沿模型权重大小（fp8）</td><td>2TB</td><td>4TB</td><td>8TB</td><td>10TB</td><td>8TB</td><td>5TB</td></tr><tr><td>所需外泄速率（TB/月）</td><td>.5</td><td>1</td><td>2.5</td><td>5</td><td>4</td><td>2.5</td></tr><tr><td>OpenBrain</td><td>WSL 2</td><td>WSL 2</td><td>WSL 3</td><td>WSL 3</td><td>WSL 4</td><td>WSL 5</td></tr><tr><td>DeepCent</td><td>WSL 0</td><td>WSL 1</td><td>WSL 3</td><td>WSL 4</td><td>WSL 4</td><td>WSL 5</td></tr></table></div>
+<div class="tablewrap"><table><tr><th>连续版本</th><th>2024年12月</th><th>2025年12月</th><th>2026年12月</th><th>2027年4月</th><th>2027年8月</th><th>2027年12月</th></tr><tr><td>OpenBrain</td><td>SSL 1.5</td><td>SSL 2.0</td><td>SSL 2.4</td><td>SSL 3.3</td><td>SSL 3.9</td><td>SSL 5.0</td></tr><tr><td>DeepCent\*</td><td>SSL 0.3</td><td>SSL 0.8</td><td>SSL 1.5</td><td>SSL 2.7</td><td>SSL 4.4</td><td>SSL 4.8</td></tr></table></div>
+<div class="tablewrap"><table><tr><th></th><th>2024年12月</th><th>2025年12月</th><th>2026年12月</th><th>2027年4月</th><th>2027年8月</th><th>2027年12月</th></tr><tr><td>OpenBrain</td><td>SSL 1</td><td>SSL 2</td><td>SSL 2</td><td>SSL 3</td><td>SSL 3</td><td>SSL 5</td></tr><tr><td>DeepCent*</td><td>SSL 0</td><td>SSL 0</td><td>SSL 1</td><td>SSL 2</td><td>SSL 4</td><td>SSL 4</td></tr></table></div>
+<div class="tablewrap"><table><tr><th></th><th>2024年12月</th><th>2025年12月</th><th>2026年12月</th><th>2027年4月</th><th>2027年8月</th><th>2027年12月</th></tr><tr><td>OpenBrain</td><td>特权访问员工</td><td>1000</td><td>1500</td><td>2000</td><td>300</td><td>200</td><td>100</td></tr><tr><td>被策反员工</td><td>5</td><td>10</td><td>20</td><td>3</td><td>1</td><td>0</td></tr><tr><td>DeepCent</td><td>特权访问员工</td><td>200</td><td>1000</td><td>400</td><td>300</td><td>200</td><td>100</td></tr><tr><td>被策反员工</td><td>0</td><td>10</td><td>3</td><td>1</td><td>0</td><td>0</td></tr></table></div>
+<h3 id="sec-68" class="chap">第2节原始数据</h3>
+<div class="tablewrap"><table><tr><th></th><th>2024年12月</th><th>2025年12月</th><th>2026年12月</th><th>2027年4月</th><th>2027年8月</th><th>2027年12月</th></tr><tr><td>OpenBrain</td><td>Cybench</td><td>40%</td><td>80%</td><td>100%</td><td>-</td><td>-</td><td>-</td></tr><tr><td>黑客攻击时程</td><td>10min</td><td>50min</td><td>5h</td><td>24h</td><td>400h</td><td>200,000h</td></tr><tr><td>AI 研发进展倍增数</td><td>1.05</td><td>1.3</td><td>2</td><td>5</td><td>25</td><td>1,000</td></tr><tr><td>顶尖人类当量</td><td>8小时</td><td>&lt;1</td><td>1</td><td>3</td><td>15</td><td>250</td><td>1e5</td></tr><tr><td>200小时</td><td>&lt;1</td><td>&lt;1</td><td>&lt;1</td><td>&lt;1</td><td>10</td><td>6000</td></tr><tr><td>DeepCent*</td><td>Cybench</td><td>35%</td><td>50%</td><td>90%</td><td>-</td><td>-</td><td>-</td></tr><tr><td>黑客攻击时程</td><td>6min</td><td>12min</td><td>2h</td><td>10h</td><td>100h</td><td>4,000h</td></tr><tr><td>AI 研发进展倍增数</td><td>1.02</td><td>1.15</td><td>1.5</td><td>4</td><td>10</td><td>200</td></tr><tr><td>顶尖人类当量</td><td>8小时</td><td>&lt;1</td><td>&lt;1</td><td>2</td><td>15</td><td>60</td><td>5,000</td></tr><tr><td>200小时</td><td>&lt;1</td><td>&lt;1</td><td>&lt;1</td><td>&lt;1</td><td>3</td><td>200</td></tr></table></div>
+<div class="tablewrap"><table><tr><th></th><th>2024年12月</th><th>2025年12月</th><th>2026年12月</th><th>2027年4月</th><th>2027年8月</th><th>2027年12月</th></tr><tr><td>OpenBrain</td><td>DeepCent 拖慢 %</td><td>&lt;1%</td><td>&lt;1%</td><td>2%</td><td>3%</td><td>10%</td><td>40%</td></tr><tr><td>DeepCent*</td><td>OpenBrain 拖慢 %</td><td>&lt;1%</td><td>&lt;1%</td><td>1%</td><td>2%</td><td>3%</td><td>5%</td></tr></table></div>
+<h3 id="sec-71" class="chap">第3节原始数据</h3>
+<div class="tablewrap"><table><tr><th></th><th>2024年12月</th><th>2025年12月</th><th>2026年12月</th><th>2027年4月</th><th>2027年8月</th><th>2027年12月</th></tr><tr><td>OpenBrain</td><td>部分颠覆成功 %</td><td>&lt;1%</td><td>&lt;1%</td><td>1%</td><td>5%</td><td>30%</td><td>80%</td></tr><tr><td>完全颠覆成功 %</td><td>&lt;1%</td><td>&lt;1%</td><td>&lt;1%</td><td>3%</td><td>10%</td><td>50%</td></tr><tr><td>自我外泄成功 %</td><td>&lt;1%</td><td>&lt;1%</td><td>&lt;1%</td><td>1%</td><td>4%</td><td>30%</td></tr><tr><td>DeepCent*</td><td>颠覆成功 %</td><td>&lt;1%</td><td>&lt;1%</td><td>&lt;1%</td><td>5%</td><td>15%</td><td>50%</td></tr><tr><td>完全颠覆成功 %</td><td>&lt;1%</td><td>&lt;1%</td><td>&lt;1%</td><td>2%</td><td>4%</td><td>20%</td></tr><tr><td>自我外泄成功 %</td><td>&lt;1%</td><td>&lt;1%</td><td>&lt;1%</td><td>1%</td><td>2%</td><td>10%</td></tr></table></div>
+<h3 id="sec-73" class="chap">安全研讨会投票原始数据</h3>
+<div class="tablewrap"><table><tr><th>问题</th><th>回应</th><th>计数</th><th>百分比</th></tr><tr><td>某国家行为体极有可能在2030年前从一家美国公司窃取前沿 AI 模型权重</td><td>同意</td><td>21</td><td>78%</td></tr><tr><td>中立</td><td>4</td><td>15%</td></tr><tr><td>不同意</td><td>2</td><td>7%</td></tr><tr><td>总计</td><td>27</td><td>100%</td></tr><tr><td>除非法律要求或强力激励并由美国政府协助，否则没有任何 AI 公司会自愿且成功地对其模型权重实施 SL5 安全</td><td>同意</td><td>17</td><td>63%</td></tr><tr><td>中立</td><td>5</td><td>19%</td></tr><tr><td>不同意</td><td>5</td><td>19%</td></tr><tr><td>总计</td><td>27</td><td>100%</td></tr><tr><td>如果在未来6年内某个时点政府把 AI 安全列为其头号国防优先事项（专项预算 &gt;$100B），对整个前沿 AI 开发举措实施 SL5 安全将耗时不到6个月</td><td>同意</td><td>6</td><td>22%</td></tr><tr><td>中立</td><td>6</td><td>22%</td></tr><tr><td>不同意</td><td>15</td><td>56%</td></tr><tr><td>总计</td><td>27</td><td>100%</td></tr></table></div>
+<p>引用：Workshop Poll. 2024. &quot;Poll of Participants.&quot; 未发表数据，来自 AI 安全情景规划互动环节，FAR.Labs AI Security Workshop，加州伯克利，2024年11月16日。N=30，回应率90%。</p>
+<div class="tablewrap"><table><tr><th>问题</th><th>选项</th><th>数值</th><th>备注</th></tr><tr><td>某 X 政府项目中的200名顶尖 AI 研究人员将至少有一名外国间谍或被胁迫者，即便经过筛选以避免此情况。</td><td>X=美国</td><td>51.0</td><td>此项投票显示中国渗透进美国项目的概率比反向渗透高出约60%。美国被渗透的概率为对半开，而中国被渗透的概率为30%。</td></tr><tr><td>X=中国</td><td>31.7</td></tr><tr><td>如果美中处于一场相互破坏对方 AI 开发的网络战中……如果中国的 AI 有1天的 Cyber-FST 而美国的 AI 有 X 天的 Cyber-FST，美国将在3个月内通过破坏至少多扩大1个月的领先。</td><td>使命题为真的 X 值</td><td>23.2</td><td>此项投票显示需要黑客攻击时程约10-50倍的优势，而这正是 OpenBrain 到2027年12月所达到的。</td></tr><tr><td>对于在 SL4 数据中心中运行自动化研究和实验的 AI……如果它有能力完成 X 天的 Cyber-FST 题目，它将能够在自己的服务器中找到漏洞并运行代码以夺取 root 控制权。</td><td>使命题为真的 X 值</td><td>271.1</td><td>此项投票显示需要约1年的黑客攻击时程，即约3,000小时的黑客攻击时程。</td></tr><tr><td>对于在 SL4 数据中心中运行自动化研究和实验的 AI……如果它有能力完成 X 天的 Cyber-FST 题目，它将能够从数据中心自我外泄，规避人类针对此的防护。</td><td>使命题为真的 X 值</td><td>303.4</td><td>此项投票显示需要约1年的黑客攻击时程，即约3,000小时的黑客攻击时程，而这正是 OpenBrain 在2027年10月前后所达到的，DeepCent 则在2027年12月前后达到。</td></tr></table></div>
+<p>引用：Workshop Poll. 2025. &quot;Poll of Participants.&quot; 未发表数据，来自 AI 安全预测环节，FAR.Labs，Zoom 会议，2025年1月23日。N=10，回应率90%。</p>
+<p>每场 CTF 竞赛中都至少有一支专业级人类团队能够解出每一道 Cybench 任务，然而首次解出时间（最快团队解出每道题所用时间）从2分钟到25小时不等。</p>
+<p>让 AI 系统完成任务所耗用的算力，不超过用支付人类完成同一任务至同等水平所需工资就能购买到的算力。AI 或人类产生的任何额外成本（例如 GPU 租用费用）都已计入这一成本相当估计中。</p>
+<p>具体请自问：『对于哪个时程 X，AI 能以相等或更少的时间/成本完成一支5人顶尖人类团队在时间 X 内所能完成的50%黑客任务？』答案即为该 AI 的黑客攻击时程。</p>
+<p>具体请自问：『对于哪个 X，AI 能以相等或更少的时间/成本完成一支规模为 X 的顶尖人类团队在时间 T 内所能完成的95%黑客任务？』该 X 即为该 AI 在时程 T 上的顶尖黑客当量值。</p>
+<p>例如，2027年8月显示中国把美国的进展拖慢到了25（否则本会是27.78）。</p>
+<p>Nevo, Sella, Dan Lahav, Ajay Karpur, Yogev Bar-On, Henry Alexander Bradley, and Jeff Alstott, Securing AI Model Weights: Preventing Theft and Misuse of Frontier Models. Santa Monica, CA: RAND Corporation, 2024. https://www.rand.org/pubs/research_reports/RRA2849-1.html 。亦有印刷版。</p>
+<p>Workshop Poll. 2024. &quot;Poll of Participants.&quot; 未发表数据，来自 AI 安全情景规划互动环节，FAR.Labs AI Security Workshop，加州伯克利，2024年11月16日。N=30，回应率90%。</p>
+<p>在我们发表之后，Rohin Shah 指出，我们建模 DeepCent 在2026年末达到 WSL3，比情景所暗示的2027年初这一时点略早——在该情景中，中国的权重安全加固是在其把研究人员搬迁到物理隔离的 CDZ 之后进行的。我们同意2027年初的表述更为一致，但差距很小，所以我们保持图表不变。</p>
+<p>在我们的一次安全研讨会投票中，10名参与者认为，『如果某国家行为体在2027年从美国窃取前沿 AI 模型权重，美国政府将在不到一个月内察觉此次窃取』的概率为46.9%。我们决定将这一预测略微上调（因为政府审查和介入的加强总体上与我们情景中快速的能力进展相一致），故预期美国政府确会在4周内察觉。同样这10名参与者认为，『如果美国政府发现中国窃取了一款在 Cybench 上得分100%的 AI，他们将在6个月内紧急干预以将安全加强到 SL5』的概率为32.8%。因此我们做出12个月的估计。</p>
+<p>在我们的一次安全研讨会投票中，10名参与者认为，『Stargate 集群（或规模相近的某个集群）将在2028年前达到 SL5 安全标准』的概率为41.5%。鉴于我们情景中总体加速的 AI 能力和政府介入时间线，我们将其上调，预测前沿美国 AI 举措将在2027年年底前后达到 WSL5。引用：Workshop Poll. 2025. &quot;Poll of Participants.&quot; 未发表数据，来自 AI 安全预测环节，FAR.Labs，Zoom 会议，2025年1月23日。N=10，回应率90%。</p>
+<p>尽管这本身不足以证明可以直接映射为 SSL 显著低于 WSL，因为边际安全努力可能会特别聚焦于针对算法机密窃取的缓解措施。</p>
+<p>Zhang, Andy K., Neil Perry, Riya Dulepet, Joey Ji, Justin W. Lin, Eliot Jones, Celeste Menders et al. &quot;Cybench: A framework for evaluating cybersecurity capabilities and risks of language models.&quot; arXiv preprint arXiv:2408.08926 (2024).</p>
+<p>回顾定义：黑客攻击时程是时间段 T：AI 能够完成50%的黑客攻击任务，而这些任务需要一支顶尖专业5人团队用 T 时间才能完成。</p>
+<p>AI Futures Project</p>
+<p>Design by Lightcone Infrastructure</p>
+    
+    <div class="footer">
+      本页为 <a href="https://ai-2027.com" target="_blank" rel="noopener">ai-2027.com</a> 的非官方中文全文译本，仅供学习交流。原文版权归原作者所有。译文如有出入，请以英文原文为准。<br>
+      情景推演 · AI Futures Project · 中文重制版
+    </div>
+  </main>
+</div>
+</body>
+</html>

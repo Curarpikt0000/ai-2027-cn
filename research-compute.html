@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>算力预测｜中文版</title>
+<style>
+:root{--accent:#5fb37a;--bg:#0e0e10;--fg:#e8e6e0;--muted:#9a9a9a;--rule:#2a2a2e;--card:#17171a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.85;font-size:17px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.topnav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 24px;background:#0b0b0d;border-bottom:1px solid var(--rule)}
+.nav-brand{font-weight:700;font-size:18px;color:var(--fg)}
+.nav-brand b{color:var(--accent)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.nav-link{color:var(--muted);padding:6px 12px;border-radius:7px;font-size:13.5px;font-weight:600;cursor:pointer}
+.nav-link:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.nav-link.active{color:var(--accent);background:var(--card)}
+.nav-dd{position:relative;display:inline-block}
+.nav-dd-menu{display:none;position:absolute;top:100%;left:0;background:#15151a;border:1px solid var(--rule);border-radius:9px;padding:6px;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.nav-dd:hover .nav-dd-menu{display:block}
+.nav-dd-menu a{display:block;color:var(--muted);padding:7px 12px;border-radius:6px;font-size:13px}
+.nav-dd-menu a:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.layout{display:grid;grid-template-columns:260px 1fr;max-width:1180px;margin:0 auto}
+.sidebar{position:sticky;top:57px;align-self:start;max-height:calc(100vh - 57px);overflow-y:auto;padding:28px 18px;border-right:1px solid var(--rule);font-size:13px}
+.sidebar .brand{font-weight:700;font-size:16px;color:var(--fg);margin-bottom:4px}
+.sidebar .brand b{color:var(--accent)}
+.sidebar .sub{color:var(--muted);margin-bottom:20px;font-size:12px}
+.toc-item{display:block;color:var(--muted);padding:5px 8px;border-radius:6px;margin-bottom:2px;line-height:1.4}
+.toc-item:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.content{padding:44px 64px;max-width:820px}
+.pagehead{border-bottom:1px solid var(--rule);padding-bottom:28px;margin-bottom:36px}
+.pagehead h1{font-size:44px;margin:0 0 8px;letter-spacing:1px}
+.pagehead h1 b{color:var(--accent)}
+.pagehead .meta{color:var(--muted);font-size:14px}
+.pagehead .authors{color:var(--muted);font-size:14px;margin-top:10px}
+h2.chap{font-size:26px;margin:52px 0 18px;padding-top:14px;border-top:1px solid var(--rule);color:var(--fg)}
+h3.chap{font-size:20px;margin:34px 0 12px;color:var(--fg)}
+p{margin:16px 0}
+ul{margin:16px 0;padding-left:22px}
+li{margin:8px 0}
+blockquote{border-left:3px solid var(--accent);margin:20px 0;padding:6px 18px;color:var(--muted);background:var(--card)}
+.tablewrap{overflow-x:auto;margin:24px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border:1px solid var(--rule);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:var(--card);color:var(--accent)}
+.endings{margin:64px 0 20px;padding-top:20px}
+.ending-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.ending-card{display:block;padding:24px;border-radius:12px;background:var(--card);border:1px solid var(--rule);transition:.15s}
+.ending-card:hover{text-decoration:none;transform:translateY(-3px)}
+.ending-card.slowdown{border-color:#3a9bdc}
+.ending-card.race{border-color:#d6453d}
+.ec-label{font-size:20px;font-weight:700;color:var(--fg);margin-bottom:8px}
+.ending-card.slowdown .ec-label{color:#3a9bdc}
+.ending-card.race .ec-label{color:#d6453d}
+.ec-desc{color:var(--muted);font-size:14px;margin-bottom:14px}
+.ec-go{font-size:14px;font-weight:600}
+.ending-card.slowdown .ec-go{color:#3a9bdc}
+.ending-card.race .ec-go{color:#d6453d}
+.backlink{display:inline-block;margin-bottom:24px;font-size:14px}
+.footer{border-top:1px solid var(--rule);margin-top:64px;padding:28px 0;color:var(--muted);font-size:13px}
+.footer a{color:var(--muted)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.content{padding:28px 18px}.ending-cards{grid-template-columns:1fr}.pagehead h1{font-size:30px}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="nav-brand" href="index.html">AI <b>2027</b></a>
+  <div class="nav-links"><a class="nav-link" href="index.html">首页</a><a class="nav-link" href="summary.html">摘要</a><a class="nav-link" href="race.html">竞速结局</a><a class="nav-link" href="slowdown.html">放缓结局</a><a class="nav-link" href="research.html">补充材料</a><a class="nav-link" href="footnotes.html">脚注</a><a class="nav-link" href="about.html">关于</a><span class="nav-dd"><span class="nav-link">研究预测 ▾</span><span class="nav-dd-menu"><a href="research-compute.html">算力预测</a><a href="research-timelines.html">时间线预测</a><a href="research-takeoff.html">起飞预测</a><a href="research-ai-goals.html">AI 目标预测</a><a href="research-security.html">安全预测</a></span></span></div>
+</nav>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="brand">AI <b>2027</b></div>
+    <div class="sub">中文全文版</div>
+    <a href="#sec-0" class="toc-item">Romeo Dean | April 2025</a>
+<a href="#sec-18" class="toc-item">引言</a>
+<a href="#sec-22" class="toc-item">第 1 章 算力生产</a>
+<a href="#sec-28" class="toc-item">芯片效率</a>
+<a href="#sec-32" class="toc-item">芯片产量</a>
+<a href="#sec-37" class="toc-item">晶圆生产</a>
+<a href="#sec-39" class="toc-item">先进封装</a>
+<a href="#sec-41" class="toc-item">高带宽内存</a>
+<a href="#sec-43" class="toc-item">硬件研发自动化</a>
+<a href="#sec-45" class="toc-item">第 2 章 算力分布</a>
+<a href="#sec-49" class="toc-item">相关主体分类</a>
+<a href="#sec-52" class="toc-item">算力拥有者</a>
+<a href="#sec-53" class="toc-item">近期</a>
+<a href="#sec-58" class="toc-item">2025 年中间预测</a>
+<a href="#sec-67" class="toc-item">2027 年预测</a>
+<a href="#sec-80" class="toc-item">算力最终用户</a>
+<a href="#sec-95" class="toc-item">第 3 章 算力使用</a>
+<a href="#sec-100" class="toc-item">算力使用总量与成本</a>
+<a href="#sec-102" class="toc-item">训练上的算力使用</a>
+<a href="#sec-108" class="toc-item">合成数据生成</a>
+<a href="#sec-110" class="toc-item">研究实验</a>
+<a href="#sec-112" class="toc-item">研究自动化</a>
+<a href="#sec-114" class="toc-item">外部部署上的算力使用</a>
+<a href="#sec-120" class="toc-item">监控上的算力使用</a>
+<a href="#sec-122" class="toc-item">第 4 章 AI 研究自动化</a>
+<a href="#sec-125" class="toc-item">现有硬件路线图</a>
+<a href="#sec-126" class="toc-item">Nvidia GPU</a>
+<a href="#sec-128" class="toc-item">晶圆级推理芯片</a>
+<a href="#sec-130" class="toc-item">2027 年自研推理芯片</a>
+<a href="#sec-134" class="toc-item">前沿模型规模与架构</a>
+<a href="#sec-136" class="toc-item">可用的算力与内存</a>
+<a href="#sec-138" class="toc-item">在并行副本数与速度之间权衡</a>
+<a href="#sec-140" class="toc-item">扩大并行副本数</a>
+<a href="#sec-142" class="toc-item">缩减并行副本数</a>
+<a href="#sec-144" class="toc-item">预测的部署权衡</a>
+<a href="#sec-149" class="toc-item">第 5 章 行业指标</a>
+<a href="#sec-151" class="toc-item">训练</a>
+<a href="#sec-155" class="toc-item">使用中的芯片</a>
+<a href="#sec-158" class="toc-item">财务</a>
+<a href="#sec-161" class="toc-item">算力成本预测</a>
+<a href="#sec-164" class="toc-item">收入预测</a>
+<a href="#sec-168" class="toc-item">电力需求</a>
+  </nav>
+  <main class="content">
+    <div class="pagehead">
+      <h1>算力预测</h1>
+      <div class="meta">Compute Forecast · 补充研究</div>
+      
+    </div>
+    <h3 id="sec-0" class="chap">Romeo Dean | April 2025</h3>
+<p>图 1：AI 2027 中的各次训练，其依据和论证来自我们的算力生产、算力分布和算力使用各章节。</p>
+<p>算力是 AI 进步的关键投入之一。在本补充材料中，我们只考虑与 AI 相关的算力。全文中我们频繁使用 H100 等效量（H100e）这一概念，将其定义为把处理性能换算成 Nvidia H100 GPU 单位后的 AI 相关算力。处理性能与训练算力最直接相关，同时也是推理算力的一个有力代理指标。</p>
+<p>在第 1 章中，我们通过考察供应链瓶颈对 AI 相关算力的生产进行建模，估计相对于 2025 年 3 月，全球可用的 AI 相关算力到 2027 年 12 月将增长 10 倍（每年 2.25 倍），达到 100M H100e。</p>
+<p>图 2：我们预测全球 AI 相关算力存量到 2027 年 12 月将增长 10 倍。</p>
+<p>在第 2 章中，我们对算力在各相关主体之间的分布进行建模，既按算力的拥有者划分，也按租用或同时拥有算力的最终用户划分。我们预计使用将集中在领先的 AGI 公司（例如 OpenAI、Anthropic、xAI）以及大型科技公司内部专注于 AGI 的研发力量（例如 Google、Meta）手中，其中规模最大的两三家到 2027 年底将占据全球可用 AI 算力的 15-20%（约 15-20M H100e），高于如今 5-10% 的份额（约 500k H100e）。</p>
+<p>图 3：我们预测全球 AI 相关算力的分布将向领先 AI 公司集中（其在全球算力存量中的份额大致翻三倍），而中国将维持大致恒定的全球算力份额（约 12%），但会将其统一到单一的国家级 AI 力量之中。</p>
+<p>图 4：我们预测领先 AI 公司可用的算力到 2027 年 12 月将增长 40 倍，其中约 10 倍来自全球 AI 相关算力存量的增长，约 4 倍来自其在总存量中使用份额的提升。</p>
+<p>图 5：截至 2027 年 12 月，全球算力增长趋势（每年 2.25 倍）与领先 AI 公司所占份额增长（每年 1.5 倍）。二者的复合效应是领先 AI 公司算力每年增长 3.4 倍。FLOP 数字假设 40% 的模型浮点运算利用率。</p>
+<p>在第 3 章中，我们描述了预计领先 AI 公司将如何使用其算力资源：从预训练和外部部署转向后训练、合成数据生成以及内部部署（即研究自动化和研究实验）。我们预测领先 AI 公司内部的算力使用将向研究自动化集中，其中用于实际运行 AI 的份额相对较小（5-10%），而用于生成合成训练数据（20%）和给 AI 提供大规模研究实验算力预算（35%）的份额较大。实际的训练和外部部署占据的份额较小（20%），但从绝对量来看，各自使用的算力仍比 2024 年高出 20 倍以上。</p>
+<p>图 6：算力使用向研究自动化集中，数据生成也在增加。</p>
+<p>在第 4 章中，我们针对 2027 年预期的 AI 研究自动化进行推理算力分析，估算所部署 AI 模型的副本数量和速度。一旦它们在 2027 年底取得显著的算法效率进步，我们预计领先 AI 公司将能够以 50 倍人类思考速度（每秒 500 词）部署约 1M 个超级智能 AI 副本，使用其算力资源的 6%，且主要依靠专用推理芯片。</p>
+<p>图 7：我们预期的 2027 年用于研究自动化的 AI 研究助手部署方案，使用专用推理芯片。绿线使用领先 AI 公司 6% 的 H100e 算力。</p>
+<p>在第 5 章中，我们专门考察预计的领先 AI 公司到 2027 年在训练、总成本、总收入和总电力使用方面的预测。我们预测收入和成本的增长率都在每年 3 倍左右，领先 AI 公司的电力使用到 2027 年 12 月约为 10GW，这意味着他们使用了约 0.8% 的美国电力容量；而 AI 全球总计使用 60GW，其中美国 50GW，约为美国预计电力容量的 3.5%（1.35TW，高于如今的 1.28TW）。</p>
+<p>图 8：第 5 章各项预测的汇总。</p>
+<p>所有估算都基于公开信息，而这些信息稀缺且不确定。大体而言，第 1 章和第 2 章相对有据可依，且独立于 AI 2027 情景，而第 3、4、5 章则远为依赖 AI 2027 中出现的 AI 能力快速跃进。</p>
+<p>致谢：David Schneider-Joseph、Erich Grunewald、Konstantin Pilz、Lennart Heim、Mauricio Baker、Tao Lin。</p>
+<h2 id="sec-18" class="chap">引言</h2>
+<p>计算能力是 AI 进步的关键投入之一。AI 训练和推理中使用的大多数计算都可以并行完成，因此 AI 芯片或 AI 加速器是一类在此类并行计算上特别高效的计算设备（例如 GPU），这使它们在 AI 计算工作负载上远比 CPU 等传统处理器有效。</p>
+<p>事实上，在本补充材料中我们只考虑 AI 相关算力，我们将其具体定义为任何能够达到至少 4,000 的总处理性能（TPP）以及至少 4 的性能密度（PD = TPP / 芯片面积）的计算单元。这一定义设定的门槛恰好略低于 A100 SXM GPU——NVIDIA 在 2021 年的顶尖芯片。作为参考，Nvidia 的 H100 GPU 标称约 15,800 TPP 和 19.4 PD。直观地说，你可以把我们的定义理解为「凡是效率至少达到 H100 四分之一的都算数」。</p>
+<p>全文中我们频繁使用 H100 等效量（H100e）作为 AI 相关算力的单位，将其定义为算力处理性能（以 TPP 计）换算成 H100 处理能力（约 15,800 TPP）后的结果。选择聚焦于 TPP 使得本文分析与训练算力最直接相关，同时也是推理算力的有力代理指标。不过，在关于运行研究智能体的推理算力那一节中，我们改用内存带宽而非 TPP 进行计算。</p>
+<h2 id="sec-22" class="chap">第 1 章 算力生产</h2>
+<p>状态：不确定但有据可依。本章是基于公开信息的有据预测。</p>
+<p>图 9：我们算力生产预测的汇总。</p>
+<p>我们预计未来三年全球 AI 相关算力总存量将以每年 2.25 倍的速度增长，从如今的 10M H100e 增长到 2027 年底的 100M H100e。我们通过将以 H100e 计的总算力可用量的增长分解为 (A) 芯片效率和 (B) 芯片产量两方面的改进来进行估算，二者分别贡献 1.35 倍和 1.65 倍的基线增长率。</p>
+<div class="tablewrap"><table><tr><th></th><th>2023</th><th>2024</th><th>2025</th><th>2026</th><th>2027</th></tr><tr><td>所生产平均芯片的性能密度（PD）倍数（H100 = 1x）</td><td>.66x</td><td>.9x</td><td>1.22x</td><td>1.64x</td><td>2.4x</td></tr><tr><td>所生产 AI 芯片总面积（H100 尺寸芯片 = 1）</td><td>3M</td><td>5.5M</td><td>9M</td><td>16M</td><td>25M</td></tr><tr><td>以 H100e 处理性能（TPP）计的 AI 芯片总产量</td><td>2M</td><td>5M</td><td>11M</td><td>25M</td><td>60M</td></tr><tr><td>累计可用 H100e</td><td>4M</td><td>8.5M</td><td>18M</td><td>40M</td><td>100M</td></tr><tr><td>每 H100e 的总拥有成本</td><td>$50k</td><td>$40k</td><td>$25k</td><td>$20k</td><td>$15k</td></tr><tr><td>AI 数据中心总支出</td><td>$110B</td><td>$270B</td><td>$400B</td><td>$600B</td><td>$1T</td></tr><tr><td>每 H100e 的数据中心总电力需求</td><td>1.3kW</td><td>1.0kW</td><td>750W</td><td>700W</td><td>550W</td></tr><tr><td>AI 数据中心总电力需求</td><td>5GW</td><td>9GW</td><td>15GW</td><td>29GW</td><td>62GW</td></tr></table></div>
+<p>另见完整的电子表格模型。</p>
+<h3 id="sec-28" class="chap">芯片效率</h3>
+<p>对于芯片效率（性能 / 面积）的改进，我们外推 Epoch AI 每年 1.35 倍的历史趋势，并发现这与已公布的即将上市芯片（例如 NVIDIA 的 GB200）的性能，以及下文详述的 Rubin 系列的传闻规划相一致。</p>
+<p>2024 年被广泛采用的顶尖 GPU 是 NVIDIA 的 H100，其原始性能为 1e15 FP16 FLOP。我们预测三年后被广泛采用的顶尖 GPU 将是 NVIDIA 的 Rubin GPU（R200），我们预计它相对 B200（2025-2026 年广泛使用）取得约 2.4 倍的提升，达到 6e15 FP16 FLOP 性能。我们认为这将通过以下方式实现：芯片面积增加 1.2 倍，从 TSMC 的 N4 工艺过渡到 N3 工艺带来 1.7 倍提升，以及其他杂项改进带来 1.1 倍提升。</p>
+<p>为避免把效率提升与芯片面积增大混淆，我们需要将顶尖 GPU 从 H100 到 R200 这总计 6 倍的性能提升，按这两款芯片之间约 2.4 倍的面积增大向下调整。这意味着未来三年芯片效率总体提升 2.5 倍，与每年 1.35 倍的历史趋势相符。我们假设 NVIDIA 前沿 GPU 上的趋势能很好地代理每年可用平均 GPU 的趋势，不仅因为它们将占芯片的大多数，还因为其他热门芯片（如 Google 的 TPU 系列）的性能应当依赖于高度相关的上游因素，例如 TSMC 制造工艺的进步。</p>
+<h3 id="sec-32" class="chap">芯片产量</h3>
+<p>图 10：我们芯片产量模型的汇总。</p>
+<p>对于芯片产量的增长，我们进一步分解为驱动产量的三个关键组成部分：(B.1) 晶圆生产，主要由 TSMC 的 N5 和 N3 工艺完成；(B.2) 先进封装产能，同样主要由 TSMC 的 CoWoS 技术提供；(B.3) 高带宽内存（HBM），主要由 SK Hynix 供应，Micron 和 Samsung 的供应份额也在日益增加。</p>
+<p>我们估计 2023 年 Nvidia 出货了 1.2M H100e，约占 AI 算力总市场的 60%，其余主要来自由 Broadcom 支持的 Google 自研 TPU 生产，2023 年总计 2M H100e。我们预计这一数字在 2024 年增至 5M H100e，其中约 60% 仍来自 Nvidia。</p>
+<p>我们主要关注 TSMC 和 SK Hynix 的产量数据，因为它们分别占各自市场份额约 90% 和 60%，并预计市场其余部分的趋势也类似。总体而言，未来三年我们预测 AI 芯片产量将受先进封装和 HBM 生产瓶颈的制约，约为每年 1.65 倍。</p>
+<h4 id="sec-37" class="chap">晶圆生产</h4>
+<p>TSMC 的 4N 节点（属其 N5 工艺）已被选定用于 Nvidia 下一代 Blackwell GPU，而 N3 工艺很可能用于预计 2026 年底进入量产的 Rubin GPU。2023 年 AI 加速器至多使用了 TSMC 合计 N5 和 N3 生产线的 3%，考虑到有报道称这些生产线有时的运转率仅有 70%，晶圆生产在未来三年极不可能成为 AI 芯片产量的瓶颈。即便产量每年翻倍，到 2027 年 AI 芯片产量也不会超过制造产能的约 40%，这还没算上新增上线的产能（约每年扩产 15%）。值得注意的是，2027 年之后，我们预计晶圆生产的限制会将芯片产量的增长率从 1.65 倍拖慢至约 1.25 倍。</p>
+<h4 id="sec-39" class="chap">先进封装</h4>
+<p>AI 加速器需要先进封装，以在逻辑单元和内存之间建立密集连接，满足 AI 工作负载所需的高吞吐量。目前 TSMC 的先进封装产能大部分用于 AI 加速器，据报道从 2023 年到 2024 年扩产了 2.5 倍。鉴于 TSMC 预期 AI 需求年增长率为 50%，我们不认为他们会过于激进地扩张这些生产线，事实上他们已宣布计划到 2026 年每年将产能提升 1.6 倍。不过考虑到 2024 年出现的约 2.5 倍扩张，我们预计原始产能扩张将超出预期，继续保持在每年约 2 倍。但与此同时，芯片效率的推进也会要求所需制造工艺的难度超出预期（具体是转向 3D 封装或未来的进步）。因此，虽然我们把原始产能建模为每年 2 倍增长（忽略难度上升），但随后又按每年 1.2 倍向下调整以反映制造难度（例如良率下降、为满足新要求而更换生产线），从而在未来三年得到每年 1.65 倍的总体速率。</p>
+<h4 id="sec-41" class="chap">高带宽内存</h4>
+<p>AI 工作负载对内存要求很高，需要昂贵、快速的高带宽内存（HBM）。HBM 生产是一项先进工艺，涉及精确堆叠并连接多个 DRAM 芯片。SK Hynix 是最早开发出这项技术的厂商，也是最早量产最新一代 HBM3e 的厂商。Micron 和 Samsung 也在追赶，其路线图力图在未来的 HBM4 及后续世代上与 SK Hynix 竞争。据报道 HBM 生产线在 2024 年相比 2023 年扩产了 2.5 倍，但 SK Hynix 仅预计未来需求增长 1.6 倍。与先进封装类似，我们预计 HBM 生产（忽略难度）将超出这些预期，以 2 倍增长，但同样考虑到日益上升的制造难度（尤其是从 8-Hi 转向 12-Hi 和 16-Hi 堆叠）而按 1.2 倍向下调整，从而在未来三年得到每年 1.65 倍的速率。</p>
+<h3 id="sec-43" class="chap">硬件研发自动化</h3>
+<p>与我们对能力和 AI 研发的更广泛预测相一致，我们预计领先 AI 公司在 2027 年将实现专用芯片设计的自动化，并增加自研芯片生产。此类雄心已有早期迹象，例如 OpenAI 招募了多产的 Google TPU 设计师，并计划于 2025 年设计其首款自研芯片。不过，随着每年 1.35 倍的芯片效率改进越来越难实现，加之我们预期研究自动化将主要投向别处，我们预计这些效应大多只会对平均芯片效率带来边际提升，使其达到 H100 的 2.4 倍（而非符合基线趋势的 2.2 倍），主要是通过一波推理专用芯片的生产来实现。</p>
+<h2 id="sec-45" class="chap">第 2 章 算力分布</h2>
+<p>状态：不确定但有据可依。本章应被视作基于有限公开信息的有据预测。</p>
+<p>图 11：我们对算力向最终用户分布的预测汇总。</p>
+<p>本章中我们预测截至 2027 年，世界 AI 相关算力中由算力提供方拥有的份额，以及由最终用户使用的 AI 算力份额。算力拥有者是指拥有并运营 AI 算力集群的实体。最终用户是指使用算力集群来运行其 AI 工作负载的实体。在某些情况下，实体既是提供方又是最终用户（例如 Google、Meta、xAI）。在另一些情况下，拥有者主要把算力租给其他实体（例如 Microsoft 租给 OpenAI，Amazon 租给 Anthropic，Oracle 租给 OpenAI）。我们采用如下对拥有者和最终用户的穷尽式分类。</p>
+<h3 id="sec-49" class="chap">相关主体分类</h3>
+<div class="tablewrap"><table><tr><th>拥有者</th><th>最终用户</th></tr><tr><td>Microsoft</td><td>OpenAI</td></tr><tr><td>Google</td><td>Anthropic</td></tr><tr><td>Amazon</td><td>Google AGI 研发</td></tr><tr><td>Meta</td><td>Google 其余部分</td></tr><tr><td>xAI</td><td>Meta AGI 研发</td></tr><tr><td>Oracle</td><td>Meta 其余部分</td></tr><tr><td>中国四巨头（Bytedance、Alibaba、Tencent、Baidu）</td><td>xAI</td></tr><tr><td>领先 AI 公司</td><td>中国 AGI 研发</td></tr><tr><td>美国其余部分</td><td>美国其余部分</td></tr><tr><td>世界其余部分</td><td>世界其余部分</td></tr></table></div>
+<p>根据我们的预测，与 2024 年 12 月相比，领先 AI 公司到 2027 年 12 月按绝对量计将拥有 20-40 倍的 AI 算力，其中 10 倍来自前文所述的算力可用量增长，3 倍来自算力向领先 AI 公司及其 AGI 研发力量的进一步集中。</p>
+<h3 id="sec-52" class="chap">算力拥有者</h3>
+<h4 id="sec-53" class="chap">近期</h4>
+<p>在算力生产一章中，我们估计 2023 年底全球可用的 AI 相关算力为 4M H100e，2024 年底为 8.5M。Epoch AI 此前在《规模扩张能否持续到 2030 年？》附录 B 中的工作估计，2024 年初 Meta 和 Microsoft 各拥有 150,000-600,000 H100e，Google 和 Amazon 各拥有 400,000-1.4M H100e。鉴于公开信息稀缺，我们对 2024 年初（2023 年 12 月 31 日）的点估计并不确定，但它们落在 Epoch AI 区间的中部，并与多个相互重叠的来源吻合。我们利用这份关于 2024 年生产和采购的报告来估算由此产生的 2024 年 12 月分布。</p>
+<p>图 12：估算的历史 AI 算力在算力拥有者之间以 H100e 计的分布。</p>
+<p>根据 Omdia（并由《金融时报》报道）的数据，2024 年美国 AI 服务器支出前五名如下所示，并附上我们对他们各自获得多少 H100e 以及由此得出的每 H100e 支出的估算。Google 强劲的支出效益源于其已进入第 6 代的自研 TPU。Amazon 和 Meta 也有重要的自研设计，但仍处于研发过程的较早阶段。Microsoft 和 xAI 购买的几乎全是 Nvidia 芯片。</p>
+<div class="tablewrap"><table><tr><th></th><th>2024 年 AI 服务器支出</th><th>2024 年相比 2023 年新增的 H100e</th><th>每 H100e 支出</th></tr><tr><td>Microsoft</td><td>$32B</td><td>800K</td><td>$39k</td></tr><tr><td>Amazon</td><td>$26B</td><td>700K</td><td>$37k</td></tr><tr><td>Google</td><td>$22B</td><td>1M</td><td>$22k</td></tr><tr><td>Meta</td><td>$20B</td><td>550K</td><td>$36k</td></tr><tr><td>xAI</td><td>$7B</td><td>200K</td><td>$37k</td></tr></table></div>
+<h4 id="sec-58" class="chap">2025 年中间预测</h4>
+<div class="tablewrap"><table><tr><th></th><th>预测的 2025 年 AI 服务器支出</th><th>2025 年相比 2024 年新增的 H100e</th><th>2025 年每 H100e 支出</th></tr><tr><td>Microsoft</td><td>$56B</td><td>2.4M</td><td>$23k</td></tr><tr><td>Amazon</td><td>$48B</td><td>2.2M</td><td>$22k</td></tr><tr><td>Google</td><td>$44B</td><td>2.2M</td><td>$20k</td></tr><tr><td>Meta</td><td>$35B</td><td>1.6M</td><td>$22k</td></tr><tr><td>xAI</td><td>$30B</td><td>1.3M</td><td>$23k</td></tr></table></div>
+<p>为预测 2025 年的算力分布，我们考察在 AI 上支出最多的美国前五家公司，以及它们 2024 年在 AI 服务器支出中所占份额。我们发现如下情况：</p>
+<ul><li>Microsoft 已宣布 2025 年 AI 支出为 $80B，去年其支出的 55% 用于 AI 服务器（$56B 中的 $31B）。我们预计 AI 服务器份额将升至 70%，从而得出 2025 年 AI 服务器支出 $56B 的估算。</li>
+<li>Google 已宣布 2025 年 AI 支出为 $75B，去年其支出的 42% 用于 AI 服务器（$52B 中的 $22B）。我们预计 AI 服务器份额将升至 58%，从而得出 2025 年 AI 服务器支出 $44B 的估算。</li>
+<li>Amazon 已宣布 2025 年支出为 $100B，去年其支出的 33% 用于 AI 服务器（$78B 中的 $26B）。我们预计 AI 服务器份额将升至 48%，从而得出 2025 年 AI 服务器支出 $48B 的估算。</li>
+<li>Meta 已宣布 2025 年支出为 $65B，去年其支出的 50% 用于 AI 服务器（$40B 中的 $20B）。我们预计 AI 服务器份额将升至 54%，从而得出 2025 年 AI 服务器支出 $35B 的估算。</li>
+<li>xAI 宣布（第 1:05:00 分钟处）2025 年在 AI 服务器上支出约 $30B。</li>
+</ul><p>图 13：预测的 AI 算力在算力拥有者之间以 H100e 计的分布。</p>
+<h4 id="sec-67" class="chap">2027 年预测</h4>
+<p>图 14：预测的 AI 算力拥有者份额，数值以 H100e 计。</p>
+<p>到 2027 年，我们的算力生产一章预测可用算力总量将增长到 100M H100e，对应每年 2.25 倍的增长。我们应当预料到这种爆炸式的增长水平会轻易撼动算力的分布格局。我们预计这一增长将由最终用户 AI 开发者持续的需求趋势所驱动，这些开发者开始从其 AI 模型中获得数百亿美元的年收入。</p>
+<p>我们做出如下预测：</p>
+<ul><li>Microsoft（受其与 OpenAI 关系的驱动）激进扩张，从占全球算力份额的 13% 增至 18%。</li>
+<li>Google 现有的算力过剩导致其扩张速度较低，算力份额从 21% 微降至 18%。</li>
+<li>Amazon 在来自 Anthropic 的持续需求以及自身 AI 力量的支撑下激进扩张，激进的建设使其份额小幅升至 18%。</li>
+<li>Meta 12% 的份额滑落至 9%，因为其主要为开源 AI 模型带来的收入相对滞后，不足以支撑其在 2026 和 2027 年进行同等程度的激进建设。注意这仍意味着其绝对算力从 1.1M 增至 7.5M H100e，增长了 7 倍。</li>
+<li>xAI 激进扩张，到 2027 年硬件资本支出总额达到约 $100B，背后有可观的 AI 收入以及 Elon Musk 的支持，其算力份额从 2% 增至 9%。</li>
+<li>美国其余部分——包括 Oracle 和 Coreweave 等较大玩家以及较小的提供方和拥有者——在一定程度上被挤出，且在经济激励上略逊于大玩家去激进扩张。总体而言，美国其余部分的份额从 18% 降至 9%。</li>
+<li>由于出口管制，中国四巨头在获取 AI 算力方面开始面临略微更大的困难，尽管中国国内产能正在提升，并以落后 Nvidia 约 3 年的品质大批量生产芯片。尽管如此，他们的份额仅从 9% 微降至 8%，因为美国出口管制执行依然不力，大量走私流入其他中国实体意味着中国的算力总量明显更高。国内产能也在通过 SMIC 提升，但在效率上落后数年。</li>
+<li>世界其余部分出于与美国较小玩家类似的原因也在一定程度上被挤出，其份额从 9% 降至 5%。</li>
+<li>最后，我们预计未来的「领先 AI 公司」会决定在 2026 年后期和 2027 年间自建数据中心。我们认为这与其收入到 2026 年底达到 $50B 的年化运行率、以及其 AI 能力帮助它在 2027 年开发出专用自研 GPU 相一致。总体而言，我们预测通过约 $90B 的支出，他们将高效地获得世界约 6% 的 AI 算力（不含自研芯片设计的研发成本）。</li>
+</ul><h3 id="sec-80" class="chap">算力最终用户</h3>
+<ul><li>OpenAI 近期的成本报告显示，2024 年他们平均租用约 250k 台 H100，我们预计这一数字呈尾部偏重的走势，到年底达到 460k，主要由 Microsoft 直接供应，也通过与 Oracle 和 Coreweave 的交易获得。这使其在全球 8.5M H100e 中的份额到年底约为 5%。</li>
+<li>预计 Anthropic 的算力使用量略微落后，为 4%，原因是其收入、用户较少，因而获取资本的能力也较弱。我们预计他们到年底可获得约 360k H100e，其中很大一部分是近期由 Amazon 提供的 400k Trainium2 集群新增的。</li>
+<li>xAI 拥有一个正在扩张的 200k H100 集群，使其份额达到 2%。</li>
+<li>Google 和 Meta 的 AI 算力机群分别占全球份额的 21% 和 13%，但我们预计他们只把这些集群中约 30% 用于 AGI 研发。Google 和 Meta 其余大部分 AI 算力都用于开发和支撑其遍布全球的大量推荐算法。</li>
+<li>我们预计来自 Amazon、Microsoft、Neocloud 等其余部分以及较小提供方机群的大部分云服务需求，将被美国其余部分和世界其余部分的各类公司和初创企业使用，二者各占约 20% 的份额。</li>
+<li>我们预计中国将使用中国四巨头拥有的几乎全部算力，以及「世界其余部分」类别所拥有算力的约一半，因为其中很大一部分集中在马来西亚和新加坡，这些算力很可能被中国使用（甚至直接走私进中国）。由此估算出中国算力使用总量为 14%，其中我们预计 2024 年底有 20% 用于 AGI 研发，从而使中国 AGI 研发份额总计为 3%。</li>
+</ul><p>在本节中，我们假设 OpenAI 将是 2027 年的领先 AI 公司。因此这里的预测只是一个示例，说明在 OpenAI 仍为领先 AI 公司的情景下算力分布会是什么样子。**</p>
+<p>图 15：预测的 AI 算力最终用户份额，数值以 H100e 计。</p>
+<ul><li>OpenAI 和 Anthropic 都激进扩张，促使其投资方 Microsoft 和 Amazon 进行激进建设，最终各自拥有部分自有数据中心。OpenAI 在全球 AI 算力中的使用份额从 2024 年底的 5% 跃升至 20%，Anthropic 从 4% 升至 14%。</li>
+<li>xAI 继续使用其在算力拥有者一节中所述的全部自有算力，因此其使用份额也从 2% 增至 9%。</li>
+<li>Google 和 Meta 现在分别把其算力的 90% 和 80% 用于 AGI 研发，因此 Google 的 AGI 研发份额从 6% 增至 16%，Meta 的 AGI 研发份额从 4% 增至 6%。</li>
+<li>中国的算力总份额保持在约 13%，但现在他们把 90%（而非 40%）用于 AGI 研发，因此中国 AGI 研发份额从 2% 增至 12%。</li>
+<li>最后，出于与提供方一节类似的原因，我们预计美国其余部分和世界其余部分的最终用户将被挤出，其使用份额分别从 23% 降至 11%、从 18% 降至 11%。</li>
+</ul><p>图 16：预测的 AI 算力最终用户以 H100e 计的分布。</p>
+<h2 id="sec-95" class="chap">第 3 章 算力使用</h2>
+<p>状态：探索性且不确定，本章是最佳猜测而非有据预测。</p>
+<p>图 17：我们算力使用预测的汇总。</p>
+<p>我们利用来自当今使用情况的公开证据，以及对领先 AI 公司未来在开发、部署和研究优先级方面相对权衡的合理推测，预期得出其内部算力使用的如下分布。本章其余部分按逐行论证下表数值的方式组织。</p>
+<div class="tablewrap"><table><tr><th></th><th>2024</th><th>2025</th><th>2026</th><th>Q1 ‘27</th><th>Q2 ‘27</th><th>Q3 ‘27</th><th>Q4 ‘27（竞速）</th></tr><tr><td>算力使用总量与成本</td><td>期间使用的平均算力（H100e）</td><td>250K</td><td>1M</td><td>4M</td><td>7M</td><td>9M</td><td>12M</td><td>15M</td></tr><tr><td>→ 期间算力支出</td><td>$5.4B</td><td>$12.5B</td><td>$30B</td><td>$20B</td><td>$25B</td><td>$30B</td><td>$45B</td></tr><tr><td>→ 以 fp16 FLOP 计的算力预算，30% 利用率</td><td>2.5e27</td><td>1e28</td><td>4e28</td><td>2e28</td><td>2.5e28</td><td>3e28</td><td>4e28</td></tr><tr><td>分项</td><td></td></tr><tr><td>训练</td><td>1）训练</td><td>40%</td><td>40%</td><td>40%</td><td>30%</td><td>27%</td><td>22%</td><td>20%</td></tr><tr><td>→ 预训练份额</td><td>60%</td><td>50%</td><td>40%</td><td>10%</td><td>8%</td><td>5%</td><td>5%</td></tr><tr><td>→ 后训练</td><td>40%</td><td>50%</td><td>60%</td><td>90%</td><td>92%</td><td>95%</td><td>95%</td></tr><tr><td>内部工作负载</td><td>2）合成数据生成</td><td>20%</td><td>20%</td><td>20%</td><td>27%</td><td>23%</td><td>22%</td><td>22%</td></tr><tr><td>3）研究实验</td><td>4%</td><td>5%</td><td>6%</td><td>14%</td><td>21%</td><td>28%</td><td>35%</td></tr><tr><td>4）研究自动化</td><td>1%</td><td>3%</td><td>4%</td><td>6%</td><td>6%</td><td>6%</td><td>6%</td></tr><tr><td>内部总计</td><td>25%</td><td>28%</td><td>30%</td><td>47%</td><td>51%</td><td>57%</td><td>63%</td></tr><tr><td>→ 能力份额</td><td>95%</td><td>96%</td><td>97%</td><td>97%</td><td>97%</td><td>97%</td><td>97%</td></tr><tr><td>→ 对齐份额</td><td>5%</td><td>4%</td><td>3%</td><td>3%</td><td>3%</td><td>3%</td><td>3%</td></tr><tr><td>外部推理</td><td>5）外部部署</td><td>33%</td><td>30%</td><td>28%</td><td>20%</td><td>19%</td><td>18%</td><td>13%</td></tr><tr><td>其他</td><td>6）监控</td><td>2%</td><td>2%</td><td>2%</td><td>3%</td><td>3%</td><td>3%</td><td>4%</td></tr></table></div>
+<h3 id="sec-100" class="chap">算力使用总量与成本</h3>
+<p>这些行的依据是我们整体的算力生产和分布预测，用以刻画一家典型领先 AI 公司在 2024 到 2027 年间其全球算力使用份额从约 5% 增长到约 20% 的情形。在那些章节中，我们预测领先 AI 公司使用的 AI 算力以每年 3.4 倍增长，计算性价比（FLOP/$）每年约改进 1.4 倍。关于成本预测的更多内容见财务一节。</p>
+<h3 id="sec-102" class="chap">训练上的算力使用</h3>
+<p>我们估计 2024 年 OpenAI 平均把 40% 的算力用于训练。我们预计其中大部分（约 60%）用于尝试扩展到下一代预训练，其余（约 40%）用于基于强化学习的后训练，重点在推理和自主性上。这与他们进行一次约 3e26 fp16 FLOP 的单次预训练相吻合，相当于 100k 台 H100 使用 4 个月，符合其历史规模扩张趋势，另有平均 100k 台 H100 用于 RL 工作负载 2.5 个月。OpenAI 似乎对单个约 100k H100 集群有相对集中的使用权，鉴于他们至少从 Coreweave、Oracle 和 Microsoft 三家提供方获取算力，芯片不太可能在不同数据中心之间足够集中且互连良好，以支撑比这更大的一次训练。此外，他们在内部和外部部署上有巨大的算力需求，更合理地占据了总量的其余部分。</p>
+<p>展望未来，我们预计：</p>
+<ul><li>未来两年训练上的使用将在 40% 上下波动。</li>
+<li>越来越大份额的训练算力被投入后训练。</li>
+<li>到 2027 年，不再有大型预训练，训练算力几乎全部投向对 2026 年训练的大模型进行的后训练工作负载。</li>
+</ul><h3 id="sec-108" class="chap">合成数据生成</h3>
+<p>2024 年，我们预计 OpenAI 约 20% 的算力用于生成合成数据，主要用例可能是通过推理时技术（例如基于树搜索）激发出所报道的「Orion」模型以及更弱的基础模型，再用评分和过滤（例如拒绝采样）来生成用于后训练 o1 和近期发布的 o3 等模型的数据。这相当于全年平均使用 50k 台 H100，即 2.5e26 fp16 FLOP。一个使用示例是对 Orion 进行 5T 次前向传播（假设它是一个以 fp8 精度提供服务的 2T 参数稠密等效模型），并对 GPT-4o 进行 500T 次前向传播。我们猜测 Orion 的前向传播不经过滤，直接用作 5T token 的高质量训练数据；而 GPT-4o 的前向传播（经搜索和评分后）大约以 16:1 的比例产出高质量 token，得到另外 30T token。这样总计生成 35T token，或许用于后训练 o1 和 o3，可支撑约 1e26 FLOP 的 GPT-4o 后训练。我们预计合成数据生成将随后训练工作负载而变得越来越重要，先维持在约 20%，然后在 2027 年增长到约 30%。</p>
+<h3 id="sec-110" class="chap">研究实验</h3>
+<p>我们预计研究实验在 2024 年是一项重要优先事项，全年平均使用 10k 台 H100。这相当于总计约 1e26 fp16 FLOP，规模可观，足以支撑一系列大大小小的训练和架构实验。随着重心从训练和外部部署转向 AI 研发自动化（尤其是在 2027 年），我们预计这一项会稳步增长，因为日益壮大的算法研究工作需要更大份额的实验预算。随着研究劳动越来越自动化，实验算力将日益成为进步的重要瓶颈，这正是为何项目使用会从 2024 年的 4% 飙升至 2027 年初的 15% 和 2027 年底的 35%。这将对应 2027 年超过 2e28 fp16 FLOP 的实验算力。</p>
+<h3 id="sec-112" class="chap">研究自动化</h3>
+<p>我们预计 2024 年内部研究自动化程度极小，仅限于员工提前使用 o1 和 o3 等模型来协助研究任务。平均 1k 台 H100，即 2e25 fp8 FLOP，就足以对 Orion（按我们的最佳猜测它是 2T 参数稠密等效）或 o1、o3 等推理成本可能相近的模型进行 250B 次前向传播。作为合理性检验，假设有 1000 名员工，这相当于每名员工 250M token，即约每天 800k token。按 8:1 的思维链比例和 100 token/秒的吞吐量，这代表每名员工每天约 1000 秒即 16 分钟的生成时间，看起来是一个合理的平均值。展望未来，随着内部模型能力增强，我们预计他们会显著扩大规模，既增加每名员工运行的模型副本数，也提升他们通常部署模型时采用的脚手架方案（因而增加推理时算力倍数）。这在 2027 年尤其飙升，随着推动使用昂贵模型自动化其研发流程，从如今的 1% 增至约 6%，但不会更高，因为研究劳动充裕，而这会导致实验算力不足。</p>
+<h3 id="sec-114" class="chap">外部部署上的算力使用</h3>
+<p>我们预计 2024 年 OpenAI 约 30% 的算力用于外部部署，全年平均为 75k 台 H100。如果他们在所服务模型上达到平均 10% 的推理利用率（在输出和输入 token 上，此处预计难以对请求进行批处理），这对应约 800T 次 GPT-4o 前向传播，即每天约 2T token。</p>
+<p>这大致合理，因为 2024 年 2 月 Aaron Levie 发推称 OpenAI 每天生成 1000 亿词。假设到年中这一数字大致翻了三倍（略微超过收入增速，利润率略有收紧）达到 400B token，并随着大量占用推理算力的 o1-preview、o1 和 o1-pro 发布而大致翻了四倍达到 1.6T token，假设平均输入:输出 token 比为 1:1（考虑到文档和其他输入），这使我们全年每天平均约各 1T token，总计 2T。</p>
+<ul><li>该份额在 2025 年应大致保持不变，然后随着内部优先级上升而开始下降，同时 2027 年前沿模型的发布因其能力可对内部 AI 研发力量带来显著生产力提升而被推迟。</li>
+<li>在未来三年中，我们预计收入份额将越来越向企业客户倾斜，因为商业模式将从以「在线聊天机器人」为主导转向「即插即用的远程工作者服务」。</li>
+<li>注意即便份额下降，绝对量仍将有非常大的跃升，从 2024 年的 75k 台 H100 增至 2027 年的 2M，这大致与我们预期的收入增长成比例。</li>
+</ul><h3 id="sec-120" class="chap">监控上的算力使用</h3>
+<p>作为一个非常粗略的经验法则，我们预计一个平均推理成本比已部署模型平均推理成本低约 10 倍的模型，会在各种场景下检查所有输入/输出 token 中的大约一半（无论是监控外部部署，还是在后来的年份里于可能更广泛的 AI 控制体系中，包括针对研究自动化）。因此，我们把外部部署和研究助手的份额相加再除以 20，得到监控算力份额的估算，可见其始终大致恒定在约 2-4%。</p>
+<h2 id="sec-122" class="chap">第 4 章 AI 研究自动化</h2>
+<p>图 18：我们预期 OpenBrain 使用其 6% 的 H100e 算力时将面临的 AI 研究智能体部署权衡的汇总，如研究自动化算力使用一节所预测。</p>
+<p>本小节包含对为 AI 模型提供服务时速度与并行副本数之间推理权衡的分析，重点关注我们认为在 AI 2027 中可能用于 AI 研究自动化的具体 AI 模型。在推理工作负载中，总聚合内存带宽是最直接的性能衡量指标，因为按序解码 token 需要在快速内存中维护一个不断增长的 KV 缓存，并在每生成一个 token 时把它连同模型权重一起加载到处理器中。因此，本节中我们以 H100 带宽等效量（H100-Be）为单位工作，即以 3.6TB/s 的总聚合带宽为一个单位（锚定在 H100 NVL 和 H100 SXM 之间的中点，假设二者产量大致相当）。</p>
+<h3 id="sec-125" class="chap">现有硬件路线图</h3>
+<h4 id="sec-126" class="chap">Nvidia GPU</h4>
+<div class="tablewrap"><table><tr><th></th><th>GPU 带宽</th><th>H100-Be</th><th>内存容量</th><th>内存世代</th><th>峰值使用期</th><th>拥有成本</th></tr><tr><td>NVIDIA H100</td><td>~3.6 TB/s</td><td>1</td><td>90 GB</td><td>HBM3</td><td>2023-2024</td><td>$40k</td></tr><tr><td>NVIDIA H200</td><td>4.8 TB/s</td><td>1.3</td><td>141 GB</td><td>HBM3e</td><td>2024-2025</td><td>$40k</td></tr><tr><td>NVIDIA B200</td><td>8 TB/s</td><td>2.2</td><td>192 GB</td><td>8x8Hi HBM3e</td><td>2025-2026</td><td>$50k</td></tr><tr><td>NVIDIA R200 Ultra</td><td>19.2 TB/s</td><td>5.3</td><td>768 GB</td><td>12x16Hi HBM4</td><td>2027</td><td>$100k</td></tr><tr><td>NVIDIA R300 Ultra</td><td>25.6TB/s</td><td>7.1</td><td>1TB</td><td>16x16-Hi HBM4</td><td>2027-2028</td><td>$120k</td></tr></table></div>
+<h4 id="sec-128" class="chap">晶圆级推理芯片</h4>
+<div class="tablewrap"><table><tr><th></th><th>GPU 带宽</th><th>H100-Be</th><th>内存容量</th><th>内存类型</th><th>峰值使用期</th><th>拥有成本</th></tr><tr><td>Cerebras WSE-3</td><td>21,000 TB/s</td><td>5800</td><td>44 GB</td><td>SRAM</td><td>2025-2026</td><td>$2-3M</td></tr><tr><td>WSE-2027</td><td>34,000 TB/s</td><td>9500</td><td>72 GB</td><td>SRAM</td><td>2027-2028</td><td>$3-4M</td></tr></table></div>
+<h3 id="sec-130" class="chap">2027 年自研推理芯片</h3>
+<p>下表包含对 2027 年领先 AI 公司可用的典型推理芯片（2027-IC）的预测。如硬件研发自动化小节所述，我们预计领先 AI 公司在 2027 年将实现专用芯片设计的自动化，并在 2027 年增加自研芯片生产。此类雄心已有早期迹象，例如 OpenAI 招募了多产的 Google TPU 设计师，并计划于 2025 年设计其首款自研芯片。</p>
+<div class="tablewrap"><table><tr><th></th><th>TSMC 工艺</th><th>芯片面积</th><th>H100e</th><th>GPU 带宽</th><th>H100-Be</th><th>内存容量</th><th>内存世代</th><th>拥有成本</th></tr><tr><td>2027-IC</td><td>3nm</td><td>60xH100</td><td>100</td><td>720 TB/s</td><td>200</td><td>17.8 TB</td><td>HBM4e</td><td>$600k</td></tr></table></div>
+<div class="tablewrap"><table><tr><th></th><th>Q1 2027</th><th>Q2 2027</th><th>Q3 2027</th><th>Q4 2027（竞速）</th></tr><tr><td>用于研究自动化的算力</td><td>研究自动化份额</td><td>6%</td><td>6%</td><td>6%</td><td>6%</td></tr><tr><td>研究自动化的算力预算（H100e）</td><td>400K</td><td>600K</td><td>800K</td><td>1M</td></tr><tr><td>研究自动化的带宽预算（2027-IC）</td><td>4K</td><td>6K</td><td>8K</td><td>10K</td></tr><tr><td>研究自动化的带宽预算（H100-Be）</td><td>800K</td><td>1.2M</td><td>1.6M</td><td>2M</td></tr><tr><td>分项</td><td></td></tr><tr><td>部署权衡</td><td>部署的副本数（实例数 x 平均批大小）</td><td>300K</td><td>400K</td><td>500K</td><td>600K</td></tr><tr><td>平均原始速度（前向传播 / 秒）</td><td>230</td><td>290</td><td>360</td><td>430</td></tr><tr><td>模型规模（参数，fp8，稠密等效，跨已部署模型的平均值）</td><td>10T</td><td>10T</td><td>5T</td><td>2T</td></tr><tr><td>AI 研发进展</td><td></td></tr><tr><td>对 AI 研发进展的影响（期间平均）</td><td>研究能力水平里程碑</td><td>Superhuman Coder</td><td>Superhuman Coder</td><td>Superhuman AI Researcher</td><td>Artificial Superintelligence</td></tr><tr><td>AI 研发进展倍数</td><td>4x</td><td>10x</td><td>50x</td><td>2000x</td></tr></table></div>
+<h4 id="sec-134" class="chap">前沿模型规模与架构</h4>
+<p>根据算力使用估算，我们预计到 2027 年初前沿训练将达到约 2e28 FLOP（在 fp8 精度下为 4e28 FLOP）。基于与 GPT-4 约 1000 倍的比例，我们朴素地预测这样一个 AI 模型将拥有约 10T 活跃参数。鉴于 AI 2027 所预测的 AI 研究自动化程度，我们预计显著的蒸馏效应会在小得多、更高效的模型中重现同等水平的能力。我们预期 AI 公司将部署一整套模型，既包括较小的模型，也包括其最大模型的新检查点——他们正对后者持续进行后训练以提升能力。尽管如此，为简化起见，我们以固定的 10T 参数稠密等效模型为单位进行速度和副本数的计算，并假设混合专家或其他未来架构可以基于其推理经济性换算成「稠密等效」参数。随后我们根据模型规模的下降在未来各时期调整速度/副本数的计算。值得注意的是，我们预计最智能的模型到 2027 年底将从约 10T 稠密等效参数降至 2T 参数，尽管模型的定性能力从中位数人类研究员提升到远超人类的超级智能研究员——这是因为算法效率爆炸式增长并逼近智能的极限。</p>
+<h4 id="sec-136" class="chap">可用的算力与内存</h4>
+<p>根据我们的算力分布预测，2027 年领先 AI 公司将拥有世界 15-20% 的算力，而根据我们的内部使用预测，他们会把其中 6% 用于运行 AI 进行研究自动化，从而在 2027 年 Q1 拥有约 4K 台 2027 自研推理芯片（2027-IC）的带宽预算，到 2027 年 Q4 拥有 10K 台 2027-IC。我们以 1K 台 2027 自研推理芯片（1k 2027-IC）为单位进行计算，其在算力上相当于 100K 台 H100、在带宽上相当于 200K 台 H100，然后用以反推 Q1 到 Q4 的部署权衡曲线。</p>
+<h4 id="sec-138" class="chap">在并行副本数与速度之间权衡</h4>
+<p>运行推理时，你可以在运行更多并行副本与更慢速度之间进行权衡，反之亦然，这种权衡受内存瓶颈（扩大副本数时）和延迟瓶颈（缩减副本数、最大化速度时）的制约。换言之，如果你把并行副本数扩大到超过你的 GPU 服务器（或一组互连良好的 GPU 服务器）HBM 总内存所能容纳的量，就会因不得不使用更慢的内存带宽连接而开始出现明显放缓；而如果你过于激进地缩减——减小批大小，且/或增加张量/模型并行度（即把模型分散到更多 GPU 上）——每个请求需要跨越集群中更多的芯片，从而导致通信瓶颈。</p>
+<h4 id="sec-140" class="chap">扩大并行副本数</h4>
+<p>假设推理以 fp4 精度运行，10T 参数将需要 5TB 内存。在一颗 2027-IC 芯片上，这会剩下 12.8TB 空闲 HBM，我们可以假设其中 1.8TB 保留作杂项用途，剩下 11TB 用于 KV 缓存。假设平均序列长度为 20k token、隐藏维度为 50k、共 250 层，这可支持最大批大小 440。因此在 1000 个实例（每颗 2027-IC 芯片 1 个）下，这对应 440K 个并行副本。每批需要 16TB/token 的带宽，因此推理速度为 45 token/秒。</p>
+<h4 id="sec-142" class="chap">缩减并行副本数</h4>
+<p>理论上你可以缩减到在全部 1000 台服务器上仅运行 1 个模型实例，但这会严重受制于通信瓶颈。更合理地，我们可以假设你把一个模型实例分散在 10 颗 2027-IC 芯片上，批大小仅为 10。这会让你只有 1,000 个并行副本。每批需要 5.3 TB/token 的带宽，因此推理速度为 1,350 token/秒——前提是这 10 颗芯片之间有足够的互连，不存在芯片间通信瓶颈。</p>
+<h4 id="sec-144" class="chap">预测的部署权衡</h4>
+<p>把这两种「扩大并行副本数」和「缩减并行副本数」的极端情形结合起来，我们可以计算介于两者之间的一系列部署选择，从而得到各时期的平均部署权衡曲线，如图 16 所示。这些曲线在计算时并未充分考虑当前或未来可能的并行技术以及芯片间通信瓶颈，不过我们相对有把握认为这些不太可能显著影响曲线。</p>
+<p>图 19：我们预期 OpenBrain 使用其 6% 的 H100e 算力时将面临的 AI 研究智能体部署权衡，如研究自动化算力使用一节所预测。</p>
+<p>我们朴素地推测，在整个 2027 年，对高并行副本数和高速度的偏好大致均衡，部署权衡平均约为 300K 个平均副本、平均速度约 20 倍人类思考速度。超出本文范围地，我们预计到 2028 年偏好会略微转向串行工作负载，因为随着逼近智能极限，增加模型副本的回报越来越递减，而 2027 年中后期的新硬件发明也有时间被制造出来并广泛投入使用。</p>
+<div class="tablewrap"><table><tr><th></th><th>Q1 2027</th><th>Q2 2027</th><th>Q3 2027</th><th>Q4 2027</th></tr><tr><td>并行副本数</td><td>300K</td><td>400K</td><td>500K</td><td>600K</td></tr><tr><td>速度</td><td>230 tok/sec</td><td>290 tok/sec</td><td>360 tok/sec</td><td>430 tok/s</td></tr><tr><td>参数</td><td>10T</td><td>10T</td><td>5T</td><td>2T</td></tr></table></div>
+<h2 id="sec-149" class="chap">第 5 章 行业指标</h2>
+<p>本章呈现对领先 AI 公司截至 2028 年前沿训练的预测，并讨论与之相关的成本、收入和电力需求预测。</p>
+<h3 id="sec-151" class="chap">训练</h3>
+<p>图 20：AI 2027 中的各次训练。</p>
+<p>我们的算力生产预测显示，2024 到 2027 年间全球 AI 相关算力以每年 2.25 倍增长。领先 AI 公司在全球存量中的份额每年增长 1.4 倍，其内部用于训练的份额在 2027 年之前维持在 40%，2027 年降至 20%。把这些综合起来，我们预测出如下各次训练。</p>
+<div class="tablewrap"><table><tr><th>模型</th><th>训练周期</th><th>训练周期内全球算力（H100e）</th><th>占全球算力份额</th><th>占内部使用份额</th><th>训练算力</th></tr><tr><td>Agent-0</td><td>Oct 2024 - May 2025</td><td>10M</td><td>6%</td><td>40%</td><td>1e27</td></tr><tr><td>Agent-1</td><td>Jul 2025 - Feb 2026</td><td>18M</td><td>9%</td><td>40%</td><td>4e27</td></tr><tr><td>Agent-2</td><td>Apr 2026 - Mar 2027</td><td>38M</td><td>14%</td><td>36%</td><td>2e28</td></tr><tr><td>Agent-3</td><td>Mar 2027 - Aug 2027</td><td>60M</td><td>16%</td><td>24%</td><td>+1e28^</td></tr><tr><td>Agent-4</td><td>Aug 2027 - Dec 2027</td><td>80M</td><td>18%</td><td>20%</td><td>+1e28^^</td></tr></table></div>
+<h3 id="sec-155" class="chap">使用中的芯片</h3>
+<p>利用我们的算力生产和算力分布章节，我们展示预计截至 2027 年领先 AI 公司使用的芯片。我们预计主体将是 Nvidia 芯片，以及 2027 年出现的自研推理芯片。</p>
+<p>图 21：领先 AI 公司截至 2027 年 12 月使用中的芯片。</p>
+<h3 id="sec-158" class="chap">财务</h3>
+<p>本小节中我们预测领先 AI 公司截至 2027 年的成本和收入。我们以 OpenAI 为锚点来理解 2025 年之前的趋势，然后用我们的其他预测向前外推。</p>
+<p>图 22：领先 AI 公司 OpenBrain 的大致成本和收入预测。</p>
+<h4 id="sec-161" class="chap">算力成本预测</h4>
+<p>《纽约时报》报道 OpenAI 预计 2024 年计算成本为 $5.4B，而 2022 年年中历时 3 个月训练的 GPT-4，据估计训练成本约为 $100M。假设 GPT-4 训练占当年算力支出的 20-40%，这意味着从 2022 到 2024 年他们的算力支出每年大约增长 11-22 倍。</p>
+<p>与此同时，计算性价比（FLOP/$）从 A100 到 H100 在 16 个月内翻了一番，我们认为这相对于前沿 AI 芯片上更接近每年约 1.4 倍的趋势而言略为异常。展望未来，我们可以取领先 AI 公司算力每年 3.4 倍的预测，按 FLOP/$ 每年改进 1.5 倍向下调整，得到领先 AI 公司在 AI 算力上支出每年平均 2.4 倍的预测。不过我们预计这一增长在头一两年会更快，随后因自研芯片设计竞争力的提升而放缓。</p>
+<h4 id="sec-164" class="chap">收入预测</h4>
+<p>我们利用 OpenAI 2023 年 $1B 的收入和 2024 年约 $4B 的收入来拼凑出一个短期趋势，我们预计该趋势会逐渐放缓，但由于自主性模型吸引高付费订阅者购买「即插即用的远程工作者」等产品，截至 2027 年仍会保持持续的指数增长。</p>
+<div class="tablewrap"><table><tr><th></th><th>2023</th><th>2024</th><th>2025</th><th>2026</th><th>2027</th></tr><tr><td>年收入</td><td>$1B</td><td>$4B</td><td>$14B</td><td>$45B</td><td>$140B</td></tr><tr><td>收入同比增长</td><td>-</td><td>300%</td><td>250%</td><td>221%</td><td>211%</td></tr><tr><td>年算力成本</td><td>$1.8B</td><td>$6B</td><td>$16B</td><td>$40B</td><td>$100B</td></tr><tr><td>算力成本同比增长</td><td>-</td><td>233%</td><td>166%</td><td>150%</td><td>150%</td></tr></table></div>
+<p>FutureSearch 预测了 OpenBrain 的收入可能如何增长，以在 2027 年年中达到 $100B。他们考察了增长最快的公司从 $1B 扩张到 $100B 的整体速度，发现完成这一跨越所需的时间随时间推移一直在缩短。一家领先公司仅用 4 年就完成这一跨越将是史上最快的，但也符合趋势。他们还审视了可能需求最高的智能体类型——从面向消费者的客服代表到研发研究员——及其价格点，从而勾勒出 OpenBrain 收入最有可能来自何处的详细草图。更多内容参见 FutureSearch 的完整报告。</p>
+<h3 id="sec-168" class="chap">电力需求</h3>
+<p>最后，我们基于所报道和预测的、我们预计将投入使用的关键 Nvidia 芯片的电力效率，对领先 AI 公司截至 2028 年所用算力的电力需求进行建模。据此我们可以反推出领先 AI 公司所需的总电力，以及由此隐含的全球 AI 数据中心总用电量（假设领先 AI 公司具有平均的电力使用效率比）。</p>
+<div class="tablewrap"><table><tr><th></th><th>性能（fp16，FLOP/s）</th><th>峰值使用期</th><th>数据中心峰值功耗</th><th>能效</th></tr><tr><td>NVIDIA H100/200 GPU</td><td>1 x 1015</td><td>2023-2024</td><td>1000W</td><td>1.0</td></tr><tr><td>NVIDIA B100/200 GPU</td><td>2.5 x 1015</td><td>2025-2026</td><td>1700W</td><td>1.47</td></tr><tr><td>NVIDIA R100/200 GPU</td><td>6 x 1015</td><td>2027-2028</td><td>~3300W</td><td>1.81</td></tr></table></div>
+<p>图 23：截至 2027 年 12 月的电力需求预测。</p>
+<p>以浮点运算（FLOP）衡量，这是一个计算单位，指特定位长（本文中我们假设为 fp16）的浮点数的乘法或加法。AI 模型的训练和推理在系统层面几乎全部由浮点数的矩阵-矩阵乘加运算构成，使 FLOP 成为一个计算成本单位。</p>
+<p>推理往往受内存带宽制约，这对推理工作负载可使用的总处理性能（TPP）起到削减作用。不过，在关于运行研究智能体的推理算力那一节中，我们改用内存带宽而非 TPP 进行计算。</p>
+<p>特别是自动化程序员里程碑于 2027 年 3 月达成，如时间线预测中所定义和阐释。</p>
+<p>矩阵乘法具有逐元素独立性（因此可以按任意顺序计算）。</p>
+<p>在约 40% 的模型浮点运算利用率（MFU）下。</p>
+<p>由于硬件研发自动化，2027 年的效率略高于趋势线。</p>
+<p>假设芯片可使用约 4 年。</p>
+<p>假设 2023 年之前已有约 2M H100e 可用。</p>
+<p>包括所有计算硬件（服务器、网络等），不含数据中心和园区内基础设施（冷却、供电、互连等）。</p>
+<p>包括所有计算硬件（服务器、网络等）以及数据中心基础设施（冷却、能源等）。</p>
+<p>假设 Epoch AI 每年 1.26 倍的电力效率趋势。从 H100 到 B100 以 1.7 倍的功耗实现了 2.5 倍的 FLOP 性能，意味着电力效率每年改进 1.2 倍。鉴于底层节点从 N4 到 N3 的变化，我们预计到 Rubin 的跃升在比例上会更好。</p>
+<p>这可以通过下载 Epoch 的历史数据，将 ML 硬件数据的 FP16 和 FP32 性能除以芯片面积，再绘制趋势来计算。最初我（Romeo）目测了大致平坦的芯片面积趋势和芯片性能趋势，就假设它也是每年 1.35 倍，忘了去精确考证。到 2025 年 12 月，多亏 Tim Fist 在这条 X 帖子中指出这一点，我终于精确核实了一番，发现对于最相关/最长期存在的精度格式而言，它实际上也恰好是每年 1.35 倍。更多解释和图表见这条 X 回复。</p>
+<p>Nvidia 此后发布了其 GTC 2025 公告，就 Rubin GPU 系列给出了更具体的细节，但我们尚未将这一消息纳入预测。</p>
+<p>增益中很可能大部分来自晶体管密度的提升。</p>
+<p>我们通过观察得到 1.1 倍的估算：B200 在与 H100 相同的 TSMC N4 类节点上，尽管芯片面积仅增加 2 倍，却实现了 2.5 倍的性能提升，意味着有 2.5/2 = 1.25 倍的改进是通过其他方法实现的；再考虑到 N4 到 N3 过渡后这种节点内优化可能减少，遂向下调整。</p>
+<p>从 H100 到 B200 增加 2 倍，从 B200 到 R100 再增加 1.2 倍。</p>
+<p>6 / 2.4 = 2.5</p>
+<p>其中 650k 为实际的 H100，其余主要是 A100，或为中国市场定制的 A800 和 H800。</p>
+<p>该来源意味着 Nvidia 出货了约 3M H100e（前 10 大买家中约 1.8M，占总量的 60%）。考虑到 Google TPU、Amazon Trainium、AMD 芯片以及 Meta 和 Microsoft 的其他自研芯片，估计再贡献 2M H100e。这与全球 AI 基础设施 $230b 支出（其中约 80% 即 $180b 很可能用于实际芯片）和 Nvidia 的 $100b 芯片收入的比例大致吻合。</p>
+<p>2023 年 TSMC 生产了约 250 万片 12 英寸 N3 和 N5 晶圆（我们通过考察其按节点划分的收入及节点定价反推得出），每片可产出约 28 颗功能正常的 H100 尺寸芯片。Google 的 TPU 性能较低但尺寸也较小，而更老的 NVIDIA 芯片会占用超出比例的晶圆面积，因此我们假设总共出货了 2M 颗 H100 尺寸芯片。总体而言，晶圆产能为 2.5M * 28 = 70M 颗 H100 尺寸芯片，而 AI 加速器仅使用了 TSMC 合计 N3 和 N5 产能的区区 3%。</p>
+<p>这些分类之所以能轻易做到穷尽，是因为它们都包含一个「世界其余部分」类别，且其设计意在最有代表性地反映我们认为最相关的主体。</p>
+<p>我们预计 OpenAI 和 Anthropic 等领先 AI 公司到 2027 年将开始拥有大量自有算力。本节中我们只对单一领先公司建模，因为我们预计 AI 开发上的领先会产生复合效应（不仅是收入带来更多算力获取，还有内部研究自动化）。这是一个相对高的不确定点，本文中的「领先 AI 公司」预测其实可以视作排名前 1-3 的 AI 公司。</p>
+<p>此处详述的建设表明 Microsoft 相比 Google 有略微更激进的计划（尽管 Google 目前占据优势）。</p>
+<p>以每小时租用成本衡量。</p>
+<p>在放缓结局中这一项会飙升。</p>
+<p>按预训练 35% 模型浮点运算利用率、后训练工作负载期间 20% 的估算进行调整。</p>
+<p>不过我们确实预计他们会用巧妙的训练算法来突破边界，以分布式方式进行其最大规模的训练，可能跨越 2-3 个数据中心。</p>
+<p>到这个阶段，我们预计绝对训练算力将保持恒定，因此份额下降——因为后训练工作负载不作修改（部分是出于将模型权重转移到更多地点的安全顾虑），而新增算力的优先事项是部署更多研究助手和扩大研究实验。</p>
+<p>X 稠密等效参数意味着推理成本与一个具有 X 参数的标准稠密 transformer 相同。例如，一个具有 2T 活跃参数、16T 总参数的 8 路 MoE，大概约为 8T 稠密等效参数。</p>
+<p>使用「6*参数*token」的训练成本经验法则，并假设后训练工作负载中 20% 的利用率。</p>
+<p>外部部署份额可能下降的另一个原因是，随着达到更高敏感度的能力（例如可规模化的 AI 网络防御智能体），这些能力可能会面向企业和机构客户营销，而这些客户似乎很可能愿意在特殊的预发布期为提前访问支付高价。</p>
+<p>这是每秒可移入 SRAM 的数据量（双向）。</p>
+<p>包括完整的服务器成本（例如网络等），但不含数据中心基础设施（例如冷却和能源）。</p>
+<p>SXM 和 NVL 变体之间的平均值。</p>
+<p>基于网上传闻每颗 GPU 有 12 个 HBM4E 堆叠。</p>
+<p>预测为 2027 年发布的产品，每颗 GPU 多集成 4 个 HBM4 堆叠，可能牺牲部分逻辑面积以换取更多带宽。</p>
+<p>内存容量明显更少，因此尽管带宽极高，单颗芯片也只能服务规模至多约 40B 参数的模型。这可以通过添加芯片间互连、用流水线并行来服务更大模型来解决。如今典型的芯片间带宽可在估计约 10 颗芯片上对 Llama 405b 进行高效推理。</p>
+<p>基于对 SRAM 密度乐观改进 60% 的预测，得益于 TSMC 的 2N 节点以及可能改进的封装技术。</p>
+<p>由于这是一款自研芯片，没有芯片设计利润，因此这与直接制造成本相近。我们预计直接制造成本约为 $400k，其中绝大部分是 HBM 内存的成本。</p>
+<p>360 个 12-Hi HBM4e 堆叠，每个具有 2TB/s 带宽和 24GB 内存，通过 3D 封装直接堆叠在逻辑单元之上。</p>
+<p>2e28 / 2e25。</p>
+<p>据估计 GPT-4o 有 200B 活跃参数。我们把这些活跃参数按 sqrt(1000) 缩放，估算出 Agent-2 约 6.3T 活跃参数。为简化起见，我们在下面的计算中使用 10T，并忽略它最终是稠密还是 MoE（甚至某种未来类 MoE 架构），因为我们预计一个良好的路由设置可使其大致等价于服务一个 10T 稠密模型。</p>
+<p>我们预测算法效率会有极高程度的进步，尤其在年底（竞速结局中）飙升。我们预计这可能逼近智能的「极限」。鉴于人脑据估计是一个非常稀疏的 100T fp8 参数神经网络，我们预计它约为 1T fp8 稠密等效参数（由 1e23 - 1e25 FLOP 的最优训练所隐含）。我们预计人脑在智能与学习的算法效率极限之内还有很大余地。</p>
+<p>这是目前 OpenAI API 上所见的典型情况。</p>
+<p>11e12 字节 / (20K（平均序列长度） * 50k（隐藏维度） * 250（层数） * 0.1（分组查询注意力） * 0.5（fp4） * 2（键+值)) = 440。</p>
+<p>「并行副本数」 = 「模型实例数」 * 「批大小」</p>
+<p>720 TB/s / 16 TB/tok = 45 tok/sec。</p>
+<p>720 TB/s * 10 颗芯片 / 5.3 TB/tok = 1,350 tok/sec。</p>
+<p>原始计算见此处。</p>
+<p>如果像 Google 或 Meta 这样的更大公司成为领先 AI 公司，本节中我们预测的是他们仅 AI 部分的收入和成本，把他们的 AI 力量当作一个想象中的子实体，类似于 OpenAI、Anthropic 和 xAI 等纯 AI 初创企业。</p>
+<p>唯一另一个重要数据点是 B200，据称其成本比 H100 高 1.3 倍，而计算性能为 2.5 倍。折算下来约 20 个月内 FLOP/$ 净增 1.9 倍，即每年 1.5 倍的速率。朴素地看 A100 到 B200 之间的二阶导数，我们可以猜测 FLOP/$ 的下一次翻番将需要 24 个月，平均下来约为每年 1.5 倍的趋势。在 AI 2027 的能力预测下，我们预计 2027 年围绕 AI 芯片的竞争将急剧加剧，导致价格上涨，因而 2027 年 FLOP/$ 仅改进 1.2 倍（不确定性高）。综合起来，未来三年平均约为每年 1.4 倍。</p>
+<p>FP16 petaFLOP/s / kW</p>
+<p>基于在 B200 基础上实现 25% 的效率提升。</p>
+<p>AI Futures Project</p>
+<p>设计由 Lightcone Infrastructure 提供</p>
+    
+    <div class="footer">
+      本页为 <a href="https://ai-2027.com" target="_blank" rel="noopener">ai-2027.com</a> 的非官方中文全文译本，仅供学习交流。原文版权归原作者所有。译文如有出入，请以英文原文为准。<br>
+      情景推演 · AI Futures Project · 中文重制版
+    </div>
+  </main>
+</div>
+</body>
+</html>

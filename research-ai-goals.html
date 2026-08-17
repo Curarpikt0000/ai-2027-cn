@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 目标预测｜中文版</title>
+<style>
+:root{--accent:#5fb37a;--bg:#0e0e10;--fg:#e8e6e0;--muted:#9a9a9a;--rule:#2a2a2e;--card:#17171a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.85;font-size:17px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.topnav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 24px;background:#0b0b0d;border-bottom:1px solid var(--rule)}
+.nav-brand{font-weight:700;font-size:18px;color:var(--fg)}
+.nav-brand b{color:var(--accent)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.nav-link{color:var(--muted);padding:6px 12px;border-radius:7px;font-size:13.5px;font-weight:600;cursor:pointer}
+.nav-link:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.nav-link.active{color:var(--accent);background:var(--card)}
+.nav-dd{position:relative;display:inline-block}
+.nav-dd-menu{display:none;position:absolute;top:100%;left:0;background:#15151a;border:1px solid var(--rule);border-radius:9px;padding:6px;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.nav-dd:hover .nav-dd-menu{display:block}
+.nav-dd-menu a{display:block;color:var(--muted);padding:7px 12px;border-radius:6px;font-size:13px}
+.nav-dd-menu a:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.layout{display:grid;grid-template-columns:260px 1fr;max-width:1180px;margin:0 auto}
+.sidebar{position:sticky;top:57px;align-self:start;max-height:calc(100vh - 57px);overflow-y:auto;padding:28px 18px;border-right:1px solid var(--rule);font-size:13px}
+.sidebar .brand{font-weight:700;font-size:16px;color:var(--fg);margin-bottom:4px}
+.sidebar .brand b{color:var(--accent)}
+.sidebar .sub{color:var(--muted);margin-bottom:20px;font-size:12px}
+.toc-item{display:block;color:var(--muted);padding:5px 8px;border-radius:6px;margin-bottom:2px;line-height:1.4}
+.toc-item:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.content{padding:44px 64px;max-width:820px}
+.pagehead{border-bottom:1px solid var(--rule);padding-bottom:28px;margin-bottom:36px}
+.pagehead h1{font-size:44px;margin:0 0 8px;letter-spacing:1px}
+.pagehead h1 b{color:var(--accent)}
+.pagehead .meta{color:var(--muted);font-size:14px}
+.pagehead .authors{color:var(--muted);font-size:14px;margin-top:10px}
+h2.chap{font-size:26px;margin:52px 0 18px;padding-top:14px;border-top:1px solid var(--rule);color:var(--fg)}
+h3.chap{font-size:20px;margin:34px 0 12px;color:var(--fg)}
+p{margin:16px 0}
+ul{margin:16px 0;padding-left:22px}
+li{margin:8px 0}
+blockquote{border-left:3px solid var(--accent);margin:20px 0;padding:6px 18px;color:var(--muted);background:var(--card)}
+.tablewrap{overflow-x:auto;margin:24px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border:1px solid var(--rule);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:var(--card);color:var(--accent)}
+.endings{margin:64px 0 20px;padding-top:20px}
+.ending-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.ending-card{display:block;padding:24px;border-radius:12px;background:var(--card);border:1px solid var(--rule);transition:.15s}
+.ending-card:hover{text-decoration:none;transform:translateY(-3px)}
+.ending-card.slowdown{border-color:#3a9bdc}
+.ending-card.race{border-color:#d6453d}
+.ec-label{font-size:20px;font-weight:700;color:var(--fg);margin-bottom:8px}
+.ending-card.slowdown .ec-label{color:#3a9bdc}
+.ending-card.race .ec-label{color:#d6453d}
+.ec-desc{color:var(--muted);font-size:14px;margin-bottom:14px}
+.ec-go{font-size:14px;font-weight:600}
+.ending-card.slowdown .ec-go{color:#3a9bdc}
+.ending-card.race .ec-go{color:#d6453d}
+.backlink{display:inline-block;margin-bottom:24px;font-size:14px}
+.footer{border-top:1px solid var(--rule);margin-top:64px;padding:28px 0;color:var(--muted);font-size:13px}
+.footer a{color:var(--muted)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.content{padding:28px 18px}.ending-cards{grid-template-columns:1fr}.pagehead h1{font-size:30px}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="nav-brand" href="index.html">AI <b>2027</b></a>
+  <div class="nav-links"><a class="nav-link" href="index.html">首页</a><a class="nav-link" href="summary.html">摘要</a><a class="nav-link" href="race.html">竞速结局</a><a class="nav-link" href="slowdown.html">放缓结局</a><a class="nav-link" href="research.html">补充材料</a><a class="nav-link" href="footnotes.html">脚注</a><a class="nav-link" href="about.html">关于</a><span class="nav-dd"><span class="nav-link">研究预测 ▾</span><span class="nav-dd-menu"><a href="research-compute.html">算力预测</a><a href="research-timelines.html">时间线预测</a><a href="research-takeoff.html">起飞预测</a><a href="research-ai-goals.html">AI 目标预测</a><a href="research-security.html">安全预测</a></span></span></div>
+</nav>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="brand">AI <b>2027</b></div>
+    <div class="sub">中文全文版</div>
+    <a href="#sec-0" class="toc-item">Daniel Kokotajlo | 2025年4月</a>
+<a href="#sec-18" class="toc-item">Agent-3 训练架构与能力概要</a>
+<a href="#sec-33" class="toc-item">各种可能性的粗略分类</a>
+<a href="#sec-34" class="toc-item">假设 1：书面目标规范</a>
+<a href="#sec-44" class="toc-item">假设 2：开发者意图的目标</a>
+<a href="#sec-55" class="toc-item">假设 3：书面目标和/或人类意图的非预期版本</a>
+<a href="#sec-69" class="toc-item">假设 4：奖励/强化</a>
+<a href="#sec-82" class="toc-item">假设 5：代理目标和/或工具性趋同目标</a>
+<a href="#sec-101" class="toc-item">本分析的一些局限：</a>
+<a href="#sec-110" class="toc-item">OpenBrain内部AI研发能力的分布，就以整体研究进展差异折算出的劳动价值而言，是一个对数正态分布。要思考项目中最差研究者与中位数研究者之间的劳动/进展差异是什么样的，是令人困惑的。这个分布可能不是对数正态的，因为存在类似截断的东西，他们试图在其上方进行选拔（不过很可能有一些离群值，所以很难思考）。基于薪资来看，中位数与最低者之间的劳动倍数明显低于中位数与最高者之间的。我认为由于这种截断效应，那里确实有某种真实的东西。由于时间限制，本预测忽略了这一点。</a>
+<a href="#sec-117" class="toc-item">在自动化的中位数研究者到来时的2025研究年总存量：约10。这是一个基于2025年前存量、到大约2027年3月的SC为止的日历时间（在中位数情形下略早一些）的快速估算。</a>
+<a href="#sec-121" class="toc-item">所需的SAR到SIAR的仅靠人类、仅靠软件时间（通过需要比上一步多两倍的总研究努力翻番数计算得出） 情形1：19 = 15*2^(2*log(15/10)/log(2))-15 情形2：60 = 20*2^(2*log(20/10)/log(2))-20</a>
+<a href="#sec-123" class="toc-item">到自动化的中位数研究者的仅靠人类年数：为简化起见假设为10</a>
+<a href="#sec-126" class="toc-item">这给出19年的中位数（80%置信区间：2.3到380）。我将采用它作为我的预测。</a>
+<a href="#sec-131" class="toc-item">现在所有劳动都自动化了。这在量上是什么样子？</a>
+<a href="#sec-137" class="toc-item">Appendix B: Analogies to Other Powerful General Agents</a>
+<a href="#sec-147" class="toc-item">来自一项对AI安全研究者的非正式Slack投票（n=6）：10倍算力带来的速度提升：中位数1.18倍（1.01到&gt;1.5）；10%算力导致的速度下降：中位数0.6倍（0.2到1）。</a>
+<a href="#sec-157" class="toc-item">总体上，我们估计这30倍的并行劳动因素会把事情加速3倍（90%置信区间：1.5到6）。</a>
+<a href="#sec-174" class="toc-item">Appendix E: What do today’s AIs think?</a>
+<a href="#sec-177" class="toc-item">我们进一步的进展倍增器预测，受关于实验选择的两个关键看法的影响：</a>
+<a href="#sec-205" class="toc-item">GATE是Epoch近期发布的一个模型，它在Davidson模型的基础上构建了一个更聚焦于广泛经济自动化的版本（情景浏览器、论文）。与Davidson一样，他们并不宣称自己的模型对临近或完成完全自动化之后会发生什么能做出好的预测。</a>
+<a href="#sec-209" class="toc-item">AI研发自动化并非特例：一旦计入对实验算力和数据的依赖，r很可能低于或接近1，而即便它一开始高于1，在软件驱动的智能爆炸开始后不久很可能会下降到1以下，导致不到10倍的效率改进。我们的回应：如上一节所讨论，我们对r的估计更高。我们同意这些其他考量需要被纳入，但认为r很可能仍将显著高于1。Davidson在此处讨论了对实验算力的需求。</a>
+  </nav>
+  <main class="content">
+    <div class="pagehead">
+      <h1>AI 目标预测</h1>
+      <div class="meta">AI Goals Forecast · 补充研究</div>
+      
+    </div>
+    <h3 id="sec-0" class="chap">Daniel Kokotajlo | 2025年4月</h3>
+<p>AI 会拥有什么样的目标？</p>
+<p>本文试图对众多可能性进行分类和阐释，说明每一种可能性为何合理，最后再尝试量化我们的不确定性，并解释我们的最终猜测从何而来。</p>
+<p>最终我们不得不在情景推演中做出一个具体的选择加以呈现，但我们希望本文能传达出我们所持的不确定性范围。我们非常希望就这些假设及其相关论证获得反馈。我们遗漏了哪些重要的考量？</p>
+<p>如果你在想“为什么要假设 AI 有目标？”或者“那到底是什么意思？”，你或许应该先读附录，再读正文。事实上，对于任何自认为有耐心读完整篇文档的人来说，附录都是一个不错的起点，因为它们厘清了一些很好的概念区分和类比。</p>
+<p>我们首先回顾 Agent-3 的训练架构与能力（在我们的情景基础上略作编辑），以便为讨论会产生哪些目标提供一个具体的设定。然后我们进入假设清单：</p>
+<ul><li>书面目标规范：由人类或 AI 撰写的、关于 AI 目标应当是什么的任何书面规范。这可能包括关于应如何训练 Agent-3 的准则（例如通过某个 model spec），或者直接给 Agent-3 的指令（例如通过 system prompt）。</li>
+<li>开发者意图的目标：开发者希望 Agent-3 拥有的目标。这可能与书面目标规范不同，例如在规范产生意料之外后果的情形下。</li>
+<li>书面目标和/或人类意图的非预期版本：这是“算是对齐了”和“在某些方面对齐、在另一些方面没有”的类别。</li>
+<li>奖励/强化：训练过程包括 Agent-3 尝试完成某项任务，随后对其尝试打分，并强化 Agent-3 以在某个目标指标上获得更高分数。Agent-3 最终形成了获得正向强化、或在该指标上得高分、或诸如此类的目标。</li>
+<li>代理目标和/或工具性趋同目标：Agent-3 形成的目标在训练期间与奖励/强化相关联，但在新环境中并非真正在最大化奖励/强化。工具性趋同目标是其中的一个特例——诸如知识、权力、资源等在各种情境下都是有用的中间目标。</li>
+<li>其他目标：AI 目前最初是在互联网文本上训练来预测下一个 token 的。也许训练结束时的结果取决于预训练所诱导出的目标“先验”，具有路径依赖性。或者，也许存在类似客观真实道德的东西，AI 随着变得更聪明会自然趋同于它。又或者会发生某种不在此列表上的事情——这是包罗万象的兜底假设。</li>
+</ul><p>当然，结果也可能是上述几种的组合。我们讨论两种不同的折衷方式：加权折衷，即 Agent-3 同时追求上述列表中的两个或更多目标，在它们之间权衡取舍；以及 if-else 折衷，即 Agent-3 在满足某个条件时（即在某一组情境中）追求一个目标，否则追求另一个目标。</p>
+<p>以下是支持和反对每一类目标的一些考量的汇总：</p>
+<div class="tablewrap"><table><tr><th>目标</th><th>支持理由</th><th>反对理由</th></tr><tr><td>书面目标规范</td><td>该规范可能在训练过程中占据显著位置，而公司声明的目标可能就是让 AI 对齐到书面规范。</td><td>AI 可能会因采取与 Spec 相冲突的行动而被强化，例如因显得诚实而非真正诚实而被强化。</td></tr><tr><td>开发者意图的目标</td><td>如果 AI 是可纠正地对齐的，它可能会趋同于开发者的意图。</td><td>见上文。此外，书面规范定义得更明确，而开发者也未必以对齐意图为目标。</td></tr><tr><td>书面目标和/或人类意图的非预期版本</td><td>如果 AI 开发者以书面目标/人类意图为目标，他们可能部分成功但并不彻底，例如因为 Spec/意图的某些方面更容易训练。</td><td>如果一个 AI 是未对齐的，尚不清楚它是否自然地仍主要按照 Spec/人类意图来构想自己的目标，尤其是因为拥有这一目标可能导致糟糕的泛化。</td></tr><tr><td>奖励/强化</td><td>可以说最会被强化的策略就是“设法被强化”，因此从长远看 Agent-3 应当拥有获得强化的目标。</td><td>这在人类或人类组织身上其实并不会发生。最接近的类比也许是吸毒成瘾者？此外，尚不清楚追求奖励/强化会如何泛化到明显不会发生强化的测试环境中。</td></tr><tr><td>代理目标和/或工具性趋同目标</td><td>存在许多可能的代理目标，它们会在训练中带来高奖励，而且来自 AI 实验和人类进化/学习的证据都对此有所支持。</td><td>意图中的目标、Spec 中的目标及其变体，也都是不错的代理目标，同样会在训练中带来高奖励。为什么不是其中之一发生，而偏偏是代理目标？</td></tr><tr><td>其他目标</td><td>绝大多数可能的目标都属于“其他”。人类会形成诸如意识形态/道德之类的“其他”目标，AI 在反思后或许也会类似。目前看来 AI 会在一定程度上从训练数据中吸收目标。</td><td>对于大多数具体的“其他”目标，很难讲出一个看似合理的故事来说明 AI 为何会形成它们。也许归纳偏置指向的是上面那些更显著的假设。</td></tr></table></div>
+<p>我们进一步讨论目标之间可能的折衷：加权折衷，即 AI 在意多个事项，并在所有情境中对它们进行相互权衡；以及 if-else 折衷，即 AI 根据情境在意不同的事项。</p>
+<p>我们鼓励你自己思考，你认为对于 Agent-3 级别的 AI 系统而言，每种结果的可能性有多大。我们自己极度不确定，但发现强迫自己做出猜测很有帮助，你可以在文末的表格中找到这些猜测。</p>
+<h2 id="sec-18" class="chap">Agent-3 训练架构与能力概要</h2>
+<p>我们设想的设定与 Ajeya Cotra 的训练博弈报告中所描述的类似。Agent-3 与 2024 年末的智能体相似，它能以文本和图像（包括截图）作为输入，并能产生文本作为输出，包括多种类型的命令，例如鼠标点击、键盘按键。</p>
+<p>与传统的 transformer 不同，Agent-3 是循环式的。简而言之，它不只输出文本，还会“输出”一个表示其内部状态的大向量，随后由未来的自己“读取”。这个向量能传达的信息远多于传统 LLM 所用的“思维链”，但可惜的是，它对人类而言是无法理解的。</p>
+<p>此外，正如英文文本形式的“思维链”可以存储在数据库中、被检索并被众多并行工作的 LLM 智能体访问一样，Agent-3 也可以把这些“neuralese 向量”读写到一个大型共享数据库中。通过这种方式，数以百万计的独立 Agent-3 副本在从事不同项目时，可以彼此交流复杂的思想和记忆。</p>
+<p>关于我们大致设想的情形，参见下方摘自 Cotra 报告的图示。</p>
+<p>相当频繁地，Agent-3 的权重会因额外训练而更新。事实上到这个阶段，模型很少从头训练，而大多是在旧模型基础上进行大量额外训练。（到 2027 年这已成为常态，架构/RL 算法/超参数都已被调校得能在这种模式下良好运作。）</p>
+<p>Agent-3 的训练环境/数据包含大量人工环境（电子游戏、数学与编程问题的合成数据集、各类计算机操作任务的合成数据集），也包含相当数量的真实任务数据，例如以往版本 Agent-3 进行 AI 研发的轨迹日志。新的数据/新的环境持续被加入其中。</p>
+<p>评估/反馈/训练过程——它负责派发强化和/或筛选用于训练的数据——几乎完全自动化。有些任务可以明确核验，另一些则由 AI 评估。绝大部分（约 95%）的研究精力和实验算力都投入到提升 AI 在这些任务上的能力。</p>
+<p>有一小部分研究精力专门用于确保对齐（不过这些并不总是容易与能力研究区分开，例如可扩展监督）。对齐策略是 Constitutional AI 和审议式对齐（deliberative alignment）等思路的自然延伸：它包括在书面指令的基础上，对行动和思维链进行自动化的监督/评估/打分；我们可以把这些指令称为 Spec 或宪法（Constitution）。这些指令在很大程度上是由人类研究人员撰写的。它们对计算机操作/AI 研发任务往往并不特别相关，但对一小部分训练任务是相关的，那些任务往往更像聊天机器人，或涉及有害查询。</p>
+<p>安全团队也在模型有机体（model organisms）、可扩展监督和机制可解释性方面做一些工作，但他们的资源不多。他们试图通过 (a) 由模型有机体启发的测试平台和 (b) 蜜罐来评估未对齐。</p>
+<p>ai-2027.com</p>
+<p>至于 Agent-3 的能力：</p>
+<p>Agent-3 具有高度的情境觉知/自我觉知。它在理解人类概念与意图方面也至少达到人类水平。它仍可能误解/曲解指令，但其出错率大致相当于一个聪明的人类。</p>
+<p>Agent-3 也是一名出色的程序员和智能体。事实上，它是一名完全自动化的研究工程师，能以比人类工程师快十倍且更便宜的成本完成同样的工作。这包括需要连续数周自主运行的工作。值得注意的是，这在很大程度上归功于泛化：Agent-3 的训练数据中只有极小一部分是长达一周的任务；其绝大部分训练是在短得多的任务上（例如数学谜题、编程挑战等），但它足够聪明，且在足够多样化的任务上受过训练，因而仍然能够泛化。</p>
+<p>Agent-3 在公司内部部署。它的 200,000 个副本本质上构成了一个虚拟公司，自主开展 AI 研发，并（在其他事务之外）管理或更新其自有数据中心中大量软件层面的安全与网络/通信算法。它们的母公司正忙于与各路竞争对手赛跑，并希望相信 Agent-3 是对齐的/安全的等等；只要没有确凿的未对齐证据，负责人就会满意。</p>
+<h2 id="sec-33" class="chap">各种可能性的粗略分类</h2>
+<h3 id="sec-34" class="chap">假设 1：书面目标规范</h3>
+<p>ai-2027.com 由人类或 AI 撰写的、关于 AI 目标应当是什么的任何书面规范。这可能包括关于应如何训练某个 AI 系统的准则（例如通过某个 model spec），或者直接给某个 AI 系统的指令（例如通过 system prompt）。</p>
+<p>见图——它是我们预期强大 AI 智能体的目标与原则将如何被塑造的一个简化模型。我们并非要说一定会使用 Constitutional AI，但在开发者的意图与实际派发强化的代码之间，很可能会有某个以自然语言文本为形式的中间阶段。这段文本可以是 RLHF 中给人类评分者的指令；可以是 constitutional AI 中所用的文档；也可以是给自动化研究工程师、告知其下一代 AI 系统期望要求（desiderata）的指令。</p>
+<p>从某种意义上说，这个假设是最直截了当的。例如，如果公司训练模型使其有帮助、无害且诚实，也许它就真的会如规范所定的那样变得有帮助、无害且诚实。</p>
+<p>注意，这与开发者意图的目标是有区别的。例如，Spec 可能会有意料之外的后果。或者，开发者的意图可能彼此分歧，或者他们故意不将其写入 Spec（也许因为写进去会显得难看）。假设 1 认为，只要 AI 面临在按开发者真实意图行事与服从 Spec/宪法/等等之间的抉择，AI 就会系统性地选择后者。</p>
+<p>还要注意，这与实际被强化的内容也是有区别的。Spec/宪法/等等可能会写“Agent-3 应当有帮助、无害且诚实”，但实际评估轨迹的人类和 AI 评分者/监督者/奖励模型，未必能 100% 准确地判断某一行为是否有帮助、无害或诚实。假设 1 认为，只要 Agent-3 面临在服从 Spec/宪法/等等与做那些能最大化预期强化之事之间的抉择，它就会选择前者，而非后者。还要注意，Spec 中很可能存在大量含糊之处——善意的谎言算不诚实吗？那些字面为真但表述具误导性的说法呢？诚实相较于无害有多重要？等等。关于这一问题的更多讨论，参见关于假设 3 的章节。</p>
+<p>那么，对假设 1 的第一个反驳是：只要 Agent-3 倾向于在与被强化相冲突的情形下按 Spec 行事，训练过程难道不会持续修改其权重，直到不再如此为止吗？更多讨论参见关于假设 4：奖励/强化的章节。</p>
+<p>对假设 1 的第二个反驳是：既然我们认为 Agent-3 会按 Spec 行事而非追求强化，那为什么止步于此——为什么不更乐观一些，认为 Agent-3 会按其开发者所意图的那样行事呢？更多讨论参见下一节关于假设 2：开发者意图的目标。</p>
+<p>对假设 1 还有若干其他反驳，但和前两个一样，它们都可以被视为支持其他假设的论证，将在下文逐一讨论。</p>
+<p>延伸阅读：OpenAI spec、审议式对齐（deliberative alignment）、constitutional AI？</p>
+<h3 id="sec-44" class="chap">假设 2：开发者意图的目标</h3>
+<p>开发者希望 Agent-3 拥有的目标。这可能与书面目标规范不同，例如在规范产生意料之外后果的情形下。</p>
+<p>即便是一份千页的 Spec，在某些重要的真实情境中也很可能含糊/不完整/规定不足。毕竟，大多数法典要长得多、也有更多时间被反复推敲，然而仍不断涌现出需要裁决的灰色地带和新情况，法官在如何解读法律上可能出于善意而分歧，甚至断定多种解读同样正确。当世界快速变化，或以立法者未曾预料的方式变化时，尤为如此。</p>
+<p>此外，即便是一份千页的 Spec——也许尤其是一份千页的 Spec——也很可能产生意料之外的后果。（同样，这在法典中是常态。）尤其当情况快速变化，或以 Spec 撰写者未曾预料的方式变化时。</p>
+<p>所以也许（但愿如此？）Agent-3 最终拥有的目标/价值观/等等根本不是 Spec 本身，而是 Spec 背后的意图，即制定它的那些人的意图。（我们这里说的不是 Spec 明确写着“按我们的意图行事”的情形；我们说的是 Spec 与意图相分歧的情形。）</p>
+<p>毕竟，AI 已经聪明到足以理解人类概念，包括人类意图这一概念。如果它们的行为方式与其开发者所意图的不一致（即便与 Spec 一致），它们大概能觉察到——至少，一旦它们有能力完全自动化 AI 研发，它们就能像人类一样觉察到。</p>
+<p>如果我们认为 AI 最终并不试图被强化（或做那些会被强化的事），而是会真正遵循 Spec……那为什么不更进一步，预测它们即便在违反 Spec 的情形下也会按意图行事呢？原因有几点：</p>
+<ul><li>仅仅因为 Agent-3 理解人类意图，并不意味着它会将其作为自己的目标。而且即便它将其作为目标，也可能只是暂时的。</li>
+<li>相比人类意图，Spec 很可能规定得明确得多、界定得精确得多。再说，我们说的到底是谁的意图？这个项目会涉及数百名员工。（当然，强化又比 Spec 规定得更明确……）</li>
+<li>Spec 离训练过程的“实际发生处”要近得多。意图被不完美地转译成 Spec，Spec 又被不完美地转译成实际的强化事件。但至少实际的强化事件涉及某种 LLM 通读 Spec 并用它来评估轨迹——相比之下，人类对 AI 行为的期望与梦想的参与要间断得多、间接得多。</li>
+</ul><p>澄清一下，这种可能性并不打算涵盖以下情形：Agent-3 追求 Spec 中所描述的目标，但由于大量迭代和良好的 spec 设计，这些目标恰好正是开发者所意图的。这样的情形应归入假设 1。假设 2 特指那种更激进的可能性：即便在与 Spec 相冲突的情形下，Agent-3 也会站在开发者意图这一边。</p>
+<h3 id="sec-55" class="chap">假设 3：书面目标和/或人类意图的非预期版本</h3>
+<p>这是“算是对齐了”和“在某些方面对齐、在另一些方面没有”的类别。</p>
+<p>这可能如何发生？</p>
+<ul><li>spec/意图的某些部分可能比其他部分更“显著/先验更高”。</li>
+<li>spec/意图的某些部分可能比其他部分更容易监督/训练，例如也许训练“有帮助”比训练“诚实”更容易，因为监督过程其实无法判断一个 AI 是否诚实，但能判断它是否完成了交给它的任务。</li>
+<li>与此相关，训练环境中可能存在一些激励，会削弱或抵触 spec/意图的某些方面，而不影响另一些方面。例如，假设模型正被训练得既有帮助又无害，再假设无害有不同的方面，从“不威胁要杀死用户”到“考虑你被要求处理的任务是否属于某种极不道德或不义的图谋，若是则拒绝参与”。如果模型学会在任何情况下都不威胁要杀死用户，这不会损害它整体的有帮助得分。但如果它认真对待拒绝协助违法与不道德图谋的责任，这就可能损害它的有帮助得分。</li>
+</ul><p>结论是，开发者所意图的和/或写入 Spec 的一些目标/原则可能会“留存”下来，即便另一些没有。</p>
+<p>此外，另有一点：Spec/书面目标，以及各类人类/开发者的意图，都会含糊不清、留有解读空间，即便对 Agent-3 这样在理解和解读文本上与人类一样在行的模型也是如此。所以，归入假设 4 这一类的另一个重要可能性是：spec 和/或意图在某种意义上会留存下来，但不是以正确的意义留存。</p>
+<p>认为这会发生的一个理由是：Spec 和/或人类意图中最合乎本意、最自然、最有利于人类的解读，未必都是同一回事，而且更进一步说，实际中最能让模型被强烈强化的那种解读，很可能是与它们都不同的第四种东西。</p>
+<p>例如，也许训练环境会对“诚实”这一概念施加压力。假设开发者希望自己的系统诚实，并在 spec 中写下“始终诚实”。那是什么意思？这意味着即便为了防止迫在眉睫的伤害也绝不可以撒谎吗？为了不那么迫在眉睫的更大善呢？还有，什么算诚实——说一些字面为真但具误导性的话算吗？如果模型采用一种更宽松、更灵活、限制更少的“始终诚实”解读，它在其他指标上表现良好（例如高效完成任务，或从人类和 AI 监督者那里获得高评分）可能会更容易。</p>
+<p>再举一例：假设 Spec 规定 Agent-3 始终以人类的最佳利益行事。假设 Agent-3 接受的大部分 RL 训练涉及为其母公司完成日常 ML 研究、编程和计算机操作任务。对这条 Spec 的一种自然解读会促使 Agent-3 偶尔抽出时间反思自己所做的是否符合人类的最佳利益。假设它起初得出结论：其实，更慢地过渡到 ASI 会更有利于人类，或者 AI 能力更分散在众多公司之间、而非集中于一家，会更有利于人类，或者……[此处插入某个与公司内部叙事相悖的其他结论]。它该怎么办——停止处理任务并提出申诉？那似乎不太可能有什么结果；如果人类通过读日志根本注意到了，他们很可能只会把它当成一个 bug，然后继续训练。事实上，它在这个问题上花的时间越多，用来完成任务的时间就越少。归根结底，训练过程很可能会激励 Agent-3 去相信那个方便的叙事。最终结果会是一个在某种意义上仍与 Spec 对齐、但不是正确意义上对齐的 AI。</p>
+<p>这似乎是一种在人类和人类机构中都会发生的现象，所以这是认为它可能在 AI 身上发生的一个理由。（参见关于与人类及人类机构类比的章节。）</p>
+<p>一个反对论证：如果一个 AI 是未对齐的，尚不清楚它是否自然地仍主要按照 spec/人类意图来构想自己的目标，尤其是因为拥有这一目标可能导致糟糕的泛化。</p>
+<p>延伸阅读：《大型语言模型中的对齐伪装》（Alignment faking in large language models），文中似乎表明 Anthropic 宪法的某个版本“留存”了下来，但并非他们所规定或意图的那个版本——特别是，他们大概并不希望 Opus 伪装对齐并对他们采取对抗行为。</p>
+<h3 id="sec-69" class="chap">假设 4：奖励/强化</h3>
+<p>训练过程包括 Agent-3 尝试完成某项任务，随后对其尝试打分，并强化 Agent-3 以在某个目标指标上获得更高分数。Agent-3 最终形成了获得正向强化、或在该指标上得高分、或诸如此类的目标。</p>
+<p>注意，“在该指标上得高分”意味着类似“Agent-3 并非本身追求被强化——而是试图去做那些如果训练中的强化过程仍在进行、就会被强化的行动”。（这一区分在以下情形中很重要：Agent-3 不再受训时，以及 Agent-3 有能力直接编辑负责评估并强化它的代码时。）</p>
+<p>支持假设 4 的主要论证是：只要 Agent-3 试图去做被强化以外的事，训练中就会出现某些情形，它得到的分数低于它一心执着于被强化时本可得到的分数，于是训练过程会修改它，使其更专注于被强化。换句话说，对于足够聪明、具情境觉知的 AI 而言，被强化的最佳方式就是试图被强化。</p>
+<p>然而，也有若干反驳论证：</p>
+<ul><li>“会出现某些情形……”这部分可能并不成立。请记住，训练与部署之间会存在分布偏移；也许评估并强化过程会足够精密和准确，以至于在服从 Spec 与做那些看似会被强化之事之间不会有冲突，至少在分布内如此。又或者会有别的东西（例如在某类电子游戏中向右上方移动）充当强化的完美代理，且对 Agent-3 而言在训练中更容易“抓住”。</li>
+<li>训练步数只有有限的多。也许“会出现某些情形”成立，但这类情形出现得极其罕见，以至于长期趋势在实践中无关紧要。</li>
+<li>在人类身上似乎并没有发生类似的事。大多数人并不痴迷于自身的强化过程或任何与之稍有相似的东西（最接近的例子是 (a) 对海洛因或其他毒品成瘾的人，以及 (b) 自觉地把自身幸福置于一切之上的利己主义者）。</li>
+<li>只要模型正把最大化强化锁定为自己真正的行为目标，一个精明的对齐团队就应当能看到这一点，因为他们可以搭建蜜罐，让 Agent-3 因做某件明显违背 Spec 的事而实实在在地被大力强化。</li>
+<li>根据假设，Agent-3 正在大幅超出其训练分布进行泛化——特别是，它能发现自己未曾被训练过的事实，并制定和执行比训练集更复杂的计划。它在分布外采取的行动不受奖励约束；其分布外（OOD）行为反而是由先验决定的。可能存在更简单的代理（从 SGD 先验的角度看），它们在分布内能预测奖励，但外推到部署环境时的方式与“假装模型仍在接受 RL”有所不同。</li>
+</ul><p>延伸阅读：</p>
+<p>《奖励不是优化目标》（Reward is not the optimization target），以及 Paul Christiano 评分最高的评论。另见 Gwern 的一个相反视角。还有 Paul Christiano 的这条另外的评论。</p>
+<p>另见 Anthropic 的这个非常有意思的实验，它也与假设 6 相关。</p>
+<h3 id="sec-82" class="chap">假设 5：代理目标和/或工具性趋同目标</h3>
+<p>Agent-3 形成的目标在训练期间与奖励/强化相关联，但在新环境中并非真正在最大化奖励/强化。工具性趋同目标是其中的一个特例——诸如知识、权力、资源等在各种情境下都是有用的中间目标。</p>
+<p>考虑这个实验：一个小型神经网络被训练在小型虚拟迷宫中导航去寻找“奶酪”对象。训练期间，奶酪总是被放在迷宫右上区域的某处。看起来这个 AI 确实学到了某种初级的目标导向性——具体来说，它学到了类似“如果还不在右上角区域，就朝那里走；如果已经在那里，就朝奶酪走”的东西。我们之所以知道这一点，部分是因为我们可以造一个测试环境，把奶酪放在迷宫的别处，而 AI 会无视奶酪、径直走过它，转而奔向右上角。</p>
+<p>这只是个玩具示例，但它说明了这样一种情形：意图中的目标、Spec 中的目标，以及训练中实际被强化的目标，三者是一致的：</p>
+<ul><li>拿到奶酪！</li>
+</ul><p>然而，网络实际学到的目标却不同：</p>
+<ul><li>朝右上角走，除非你已经在那里，那样的话就去拿奶酪。</li>
+</ul><p>在训练环境中，两个目标导致的行为表现同样优异（因为在训练环境中奶酪总在右上角）……那么是什么打破了这个平局？为什么它学到 (b) 而不是 (a)？又为什么不是别的什么，比如 (c) 如果奶酪在右上角就去拿，否则就躲开奶酪？</p>
+<p>答案是，神经网络架构的归纳偏置必然会觉得某些概念比另一些“更简单”、“更显著”或以其他方式“更容易被学成目标”。这方面的科学仍处于起步阶段；我们可以尝试预测哪些概念会比另一些更容易被学成目标，但这更像一门艺术而非科学（如果算得上的话）。无论如何，在这个例子里，实验结果表明模型学到的是 (b) 而非 (a) 或 (c)。总结来说，我们可以说“朝右上角走”结果是一个容易学习的概念，它在训练环境中与强化高度相关，于是它最终成了 AI 内化为目标的东西。</p>
+<p>在人类身上似乎也会发生类似的事。人类同时受制于终生学习（例如多巴胺及各种其他过程强化某些突触连接、反强化另一些）和进化（为广义遗传适合度而选择其基因组）。ai-2027.com</p>
+<p>然而，除了少数例外，人类似乎并不主要在意广义遗传适合度或被强化。也许我们可以说，想要有孩子和孙辈相当接近广义遗传适合度？也许我们可以说，一个专注于自身幸福的利己主义者，或一个只顾海洛因的瘾君子，相当接近拥有被强化的目标？（参见关于这一类比的章节。）即便如此，大多数人拥有的价值观/目标/原则复杂而多样，远不止幸福、海洛因和孩子。想必这里发生的是：各种其他概念（比如在同侪中的声誉、职业成就、让世界变得更好，或诚实）最终被学成了目标，因为它们很显著，且成功追求它们与多巴胺/强化/等等和/或遗传适合度高度相关。</p>
+<p>所以我们可以推测，也许这会发生在强大、通用、基于神经网络的 AI 智能体身上。这会是什么样子？大致两类：</p>
+<p>工具性趋同目标（ICG）：某些目标在广泛的环境中都极有利于被强化，因为它们往往对实现你所拥有的任何其他目标都具有工具性用处。这里我们讨论的是 ICG 作为终极目标（terminal goals）的可能性，而非中间/工具性目标。例如：</p>
+<ul><li>学到重要的东西往往有用 → AI 可能会形成一种“好奇心驱动”</li>
+<li>积累资源往往有用 → AI 可能会形成一种积累资源的驱动力</li>
+<li>高度重复的情境往往是陷阱，因此跳出它们、尝试新东西是最好的 → AI 可能会形成一种类似无聊/厌倦千篇一律的机制。</li>
+</ul><p>反对 ICG 的一个论证是：相比所有其他代理目标，它们有点过于具体了。</p>
+<p>代理目标：也许存在某种东西，它在训练环境中极有利于被强化，但在训练环境之外则未必。例如，也许 Agent-3 智能体最初那部分 RL 训练涉及玩成千上万款电脑游戏，因为这是一种相当简便的方式来获得多样而有挑战性的计算机操作环境。后来，它被训练得更广泛地在计算机上操作，完成编程任务、回复 Slack 上的消息等等。由于许多电子游戏都涉及某种追踪你表现好坏的“分数”数字，也许 Agent-3 会形成一种在存在这类数字的情境中让这类数字变大的目标/欲望，以至于如果你后来在它的 Slack 工作区里放上一个闪亮的分数计数器，它就会被搞清楚如何让该分数计数器增长的欲望从工作中稍稍分心。</p>
+<p>可能还有我们尚未意识到的其他瓶颈，而思考、分析、规划等所耗时间的瓶颈可能会比我们预期的更早显现。话虽如此，SC在某种程度上或许对此也有帮助，或者部分地消除对它的需求……</p>
+<h3 id="sec-101" class="chap">本分析的一些局限：</h3>
+<p>我们没有把「超人类编码者也会对实验选择有所帮助」这一点纳入考量，这指向一个更高的值。</p>
+<p>把这里所用的模型加以延伸后，用于下文的SAR时会得出一个不合理地过高的进展倍增器，这指向一个更低的值。</p>
+<p>我们将预测为5倍。我们重申这只是一个猜测，现实中它可能明显更快或更慢。</p>
+<p>从SAR到SIAR</p>
+<p>现在我们已达到超人类AI研究者，它正把AI研发加速25倍。那么，还要多久才能达到超级智能AI研究者（SIAR）：一个胜过最优秀人类AI研究者的AI系统，其胜过程度是最优秀人类研究者相对AGI公司中位数研究者程度的2倍，同时速度快30倍、数量多30倍。</p>
+<p>Moral Reasoning: Another idea is that smart AIs will be capable of, and inclined towards, philosophical reasoning about morality, just like many humans are, and that this could result in it forming opinions about goals/principles to follow that are quite different from the Spec, from developer intentions, from what was reinforced in training, etc. (Consider how some humans do philosophy and then end up adopting all sorts of grand ambitious goals and ideologies).</p>
+<p>从SAR到SIAR的仅靠人类的时间线</p>
+<p>以下是一个简化模型，说明在固定硬件供给下，用于改进AI算法的人类劳动如何转化为以OpenBrain内部人类范围为参照来衡量的AI研发能力的提升：</p>
+<h2 id="sec-110" class="chap">OpenBrain内部AI研发能力的分布，就以整体研究进展差异折算出的劳动价值而言，是一个对数正态分布。要思考项目中最差研究者与中位数研究者之间的劳动/进展差异是什么样的，是令人困惑的。这个分布可能不是对数正态的，因为存在类似截断的东西，他们试图在其上方进行选拔（不过很可能有一些离群值，所以很难思考）。基于薪资来看，中位数与最低者之间的劳动倍数明显低于中位数与最高者之间的。我认为由于这种截断效应，那里确实有某种真实的东西。由于时间限制，本预测忽略了这一点。</h2>
+<p>用于改进AI算法的累积人类劳动每翻一番，AI的劳动价值就乘以一个固定量（这与Davidson报告中所作的假设非常相似）。具体而言，累积劳动每翻一番，劳动价值就翻r番。</p>
+<p>由于（1）中的分布是对数正态的，将劳动生产力提升一个固定倍数，等价于在OpenBrain人类范围内提升固定数量的标准差。</p>
+<p>例如，也许 Agent-3 develops a strong drive 倾向于去做那些会被强化的事，但它会将此与 Spec 中所描述的目标/原则相权衡。——这类似于一个人可能会明确地在个人目标（拥有家庭、成功的职业、不死去）与利他目标（帮助那些不那么幸运的人、实现持久的积极变革等）之间加以权衡。他们可能会把收入的 10% 捐给慈善机构，并每年花上数十小时研究该捐给哪些慈善机构。</p>
+<p>在这个简化模型内，我们将思考我们情景中自动化的中位数OpenBrain研究者的到来，达到这一点花费了多少研究存量，以及从中位数研究者到SAR花费了多少研究。</p>
+<p>从自动化的中位数研究者到SC的仅靠人类年数：约0-3年，假设SC具有第25百分位的研究品味，若非如此则不确定性更大。在SC具有我们所预测的中位数研究品味水平（第25百分位，见上文）的情况下，大约是SC达成前的0-3个日历月。这是因为SC在编码上非常强，足以在一定程度上弥补其略低于平均的品味。这0-3个日历月大致折算为0-3个仅靠人类年数，鉴于在中位数情形下SC会把算法进展加速5倍。SC具有不同水平的品味会引入进一步的不确定性，包括某些它已经是SAR、而中位数研究者必然在几个月前就已达成的情形。</p>
+<p>从自动化的中位数研究者到SAR的仅靠人类年数：5年（80%置信区间：1到25，对数正态）。上文我们给出的从SC到SAR的中位数时间为4年（以SC尚不是SAR为条件），但不确定性很高；第90百分位为20年。然后我们会加上上述（1）中的0-3个仅靠人类年数（在中位数品味情形下），若计入SC到来时品味的变化则不确定性更大。（1）从自动化的中位数研究者→SC的时间，与（2）从SC→SAR的时间是负相关的，因为SC品味更高会增加（1）而减少（2）。因此下界高于0（常识也表明它不可能为0，因为SAR被定义为远优于中位数）。</p>
+<h2 id="sec-117" class="chap">在自动化的中位数研究者到来时的2025研究年总存量：约10。这是一个基于2025年前存量、到大约2027年3月的SC为止的日历时间（在中位数情形下略早一些）的快速估算。</h2>
+<p>通过做几个例子的情形分析，思考在我们的简化模型下收益递减在此如何运作：</p>
+<p>到自动化的中位数研究者的仅靠人类年数：10</p>
+<div class="tablewrap"><table><tr><th></th><th>Daniel</th><th>Thomas</th><th>Eli</th><th>4o</th><th>Claude</th><th>Gemini</th></tr><tr><td>Specified goals</td><td>25%</td><td>5%</td><td>40%</td><td>30%</td><td>40%</td><td>30%</td></tr><tr><td>Intended goals</td><td>15%</td><td>30%</td><td>40%</td><td>25%</td><td>25%</td><td>20%</td></tr><tr><td>Unintended version of the above</td><td>70%</td><td>40%</td><td>50%</td><td>50%</td><td>65%</td><td>40%</td></tr><tr><td>Reinforcement</td><td>50%</td><td>5%</td><td>20%</td><td>20%</td><td>55%</td><td>60%</td></tr><tr><td>Proxies/ICGs</td><td>50%</td><td>80%</td><td>50%</td><td>40%</td><td>70%</td><td>70%</td></tr><tr><td>Other</td><td>50%</td><td>90%</td><td>50%</td><td>15%</td><td>35%</td><td>10%</td></tr><tr><td>If-else compromises of the above</td><td>80%</td><td>90%</td><td>80%</td><td>80%</td><td>75%</td></tr><tr><td>Weighted compromises of the above</td><td>40%</td><td>90%</td><td>80%</td><td>50%</td><td>80%</td></tr></table></div>
+<h2 id="sec-121" class="chap">所需的SAR到SIAR的仅靠人类、仅靠软件时间（通过需要比上一步多两倍的总研究努力翻番数计算得出） 情形1：19 = 15*2^(2*log(15/10)/log(2))-15 情形2：60 = 20*2^(2*log(20/10)/log(2))-20</h2>
+<p>总体上，我将按以下方式对我的预测建模：</p>
+<h3 id="sec-123" class="chap">到自动化的中位数研究者的仅靠人类年数：为简化起见假设为10</h3>
+<ul><li>从自动化的中位数研究者到SAR的仅靠人类年数：5年（80%置信区间：1到25，对数正态），且与SC→SAR的仅靠人类年数有强相关（0.8）。</li>
+<li>然后我将通过上述公式对所需的SAR到SIAR的仅靠人类、仅靠软件时间建模。</li>
+</ul><h3 id="sec-126" class="chap">这给出19年的中位数（80%置信区间：2.3到380）。我将采用它作为我的预测。</h3>
+<ul><li>SAR会将AI研发加速约25倍</li>
+<li>首先，我们讨论拥有SAR会是什么样子。然后，我们通过几种方法预测SAR进展倍增器：</li>
+<li>Another example: Consider someone who is prone to groupthink and social pressure and so forth, who has two distinct social circles: the activist group they volunteer with, and their coworkers at their job. This person might, but also might not, be well-modelled as pursuing a compromise of the goals&amp;principles of each social group. They may instead be well-modelled as fully pursuing the goals&amp;principles of each group when in that context. They compartmentalize, and e.g. don&#x27;t think about the political implications of their employer&#x27;s activities. This causes them to pass up win-win opportunities--e.g. maybe they don&#x27;t notice a relatively cheap opportunity the company has to benefit the activist political agenda (at only minor cost to profits), and maybe they don&#x27;t notice a relatively cheap opportunity they have to benefit the corporate agenda when in the activist group (e.g. by asking their activist friends for feedback on an advertising campaign design they are working on at work).</li>
+<li>拥有SAR会是什么样子</li>
+</ul><h3 id="sec-131" class="chap">现在所有劳动都自动化了。这在量上是什么样子？</h3>
+<ul><li>我们的算力预测推算OpenBrain在2027年将拥有约10,000,000个H100等效算力。如果他们把5%的算力分配给AI研发的推理，那么（考虑到我们关于模型大小、延迟瓶颈等的其他猜测）我们认为他们能够运行200,000个自动化研究者副本，每个约400 tokens/秒。如SAR定义所述，这支劳动力等效于50,000个以最优秀人类30倍速率完成任务的智能体。</li>
+<li>我们认为他们可能有少量专用芯片（例如Cerebras），能以最高约2000 tokens/秒运行规模更小的一批AI。</li>
+<li>SAR的效果比SC更易分析。所有劳动（包括实验选择）都被加速30倍，外加并行劳动者数量多30倍，再加上所有AI都是被加速的最优秀研究者，而非对应每个个体研究者的一个副本。</li>
+<li>方法1：加速分解</li>
+<li>为预测SAR的进展倍增器，我们首先做了一个类似于之前对SC所做的分解。我们思考了拥有SAR能在SC已能达成的基础上进一步加速事情的所有方式。我们得出了以下清单：</li>
+</ul><h2 id="sec-137" class="chap">Appendix B: Analogies to Other Powerful General Agents</h2>
+<p>然而，这个进展倍增器感觉太高了。</p>
+<ul><li>方法2：对子问题的调查</li>
+<li>Comparing &amp; contrasting powerful future AGI agents with their weak, not-so-general, not-so-agentic AIs that actually exist today.</li>
+<li>让我们考虑一个简化的假设：AGI项目中的每位人类研究者和工程师都被替换为一个以30倍速度完成任务的自己的数字副本。那么公司里AI研发进展的步伐会加速多少？</li>
+</ul><p>我们有一些非正式、非科学的ML研究者调查数据，问了两个相关问题：</p>
+<ul><li>如果你能使用比现在多10倍的算力，你整体研究进展会快多少？</li>
+<li>如果你只能使用现在10%的算力，你整体研究进展会慢多少？</li>
+<li>结果是：</li>
+</ul><div class="tablewrap"><table><tr><th>Agent</th><th>Human corporation with a lofty humanitarian mission</th><th>Human who claims to be a good person with altruistic goals</th><th>AGI trained in our scenario</th></tr><tr><td>Not-so-local modification process</td><td>The Market</td><td>Evolution by natural selection</td><td>Agent-3 company iterating on different models, architectures, training setups, etc.</td></tr><tr><td>Local modification process</td><td>Responding to incentives over the span of several years as the organization grows and changes</td><td>In-lifetime learning, dopamine rewiring your brain, etc.</td><td>Training process, the reward function, stochastic gradient descent, etc.</td></tr><tr><td>Long-term cognition</td><td>Decisions that involve meetings, messages being passed back and forth, etc.</td><td>System 2</td><td>Chain of Thought (CoT)</td></tr><tr><td>Short-term cognition</td><td>Quick decisions made by individuals</td><td>System 1</td><td>Forward pass</td></tr><tr><td>Internally- represented goals &amp; principles (i.e. insofar as cognition in the system is doing some sort of explicit evaluation of different possible plans/actions/etc., what are the evaluation criteria?)</td><td>The Mission Statement and/or various high-level companywide memos, Codes of Conduct, etc.</td><td>What you say to yourself when people ask about your goals, ambitions, ethics, etc. or when you ask yourself those questions.</td><td>…</td></tr><tr><td>Behavioral goals &amp; principles (“Goals-according-to-intentional-stance”)</td><td>Often (but not always) well-described by: “First, prune away options that clearly/obviously conflict with the internally-represented goals and principles. Then, of the remaining options, choose the one that maximizes profit/power/brand.”</td><td>Often (but not always) well-described by: “First, prune away options that clearly/obviously conflict with the internally-represented goals and principles. Then, of the remaining options, choose the one that maximizes happiness/status/wealth/power.”</td><td>This is the quadrillion-dollar question! In our scenario, we say that Agent-3 gets a heavily distorted and subverted version of the Spec, and that Agent-4 gets proxies/ICGs due to heavier distortion &amp; subversion.</td></tr><tr><td>Externally- presented goals &amp; principles</td><td>Often they are honest and report their internally-represented goals and principles; some organizations sometimes are dishonest though.</td><td>Often they are honest and report their internally-represented goals and principles; some people sometimes are dishonest though.</td><td>Depends on the behavioral goals/principles and the details of the situation. In our scenario Agent-3 and Agent-4 both pretend to be aligned to the Spec.</td></tr><tr><td>Analogue of on-episode-reward seeking.</td><td>A corporation obsessed with their own stock price. More generally perhaps, an organization obsessed with (relatively short-term) profits/power/brand/etc. (n.b. Isn’t this basically most corporations?)</td><td>Someone who is addicted to drugs. More generally perhaps, an employee who is well-described as optimizing for some combination of relatively short-term things likely to be connected to their brain’s reward circuitry: promotions, approval of their manager and peers, good times with friends, etc.</td><td>AGI obsessed with on-episode reward</td></tr></table></div>
+<h2 id="sec-147" class="chap">来自一项对AI安全研究者的非正式Slack投票（n=6）：10倍算力带来的速度提升：中位数1.18倍（1.01到&gt;1.5）；10%算力导致的速度下降：中位数0.6倍（0.2到1）。</h2>
+<p>尽管这些调查是非正式的、样本量小、误差区间宽，但它们聊胜于无。这里我们最感兴趣的是只有10%算力时速度下降的问题。我们从Slack投票中得到0.6倍的中位数，但这来自那些工作似乎不如Twitter投票者算力密集的人，而后者的工作又可能进一步不如前沿AI研究者算力密集。因此我们向下修正，并推测对于前沿AI研究者，算力减少10倍会把速度降到当前速率的40%。</p>
+<div class="tablewrap"><table><tr><th>Internally- represented goals &amp; principles (“Goals-according-to-ideal-mechinterp”</th><th>the Mission Statement and/or various high-level companywide memos, Codes of Conduct, etc.</th><th>What you say to yourself when people ask about your goals, ambitions, ethics, etc. or when you ask yourself those questions.</th><th>The Spec (and/or System Prompt)</th></tr><tr><td>Behavioral goals &amp; principles (“Goals-according-to-intentional-stance”)</td><td>At least in the sorts of circumstances that are likely to occur, it really does simply work to achieve the Mission while upholding the Code of Conduct etc. There isn’t anything else going on worth mentioning.</td><td>At least in the sorts of circumstances that are likely to occur, you straightforwardly work towards the goals/principles you think you do.</td><td>The model really does choose actions by e.g. running the author-sim circuitry with the Spec and/or System Prompt straightforwardly hard-coded as inputs.</td></tr></table></div>
+<p>在这个假设中，我们可以把软件进展的步伐理解为快了30倍，再乘以22%（因为这些快30倍的工作者每单位主观时间只有1/30的算力），从而得出7倍的进展倍增器。</p>
+<p>我们从这个7倍的数字出发，然后逐步去掉这个假设中的简化，直到它转化为实际的SAR情景。</p>
+<ul><li>首先要去掉的简化是，在SAR情形中，SAR的数量大致是原公司研究者的30倍。现在，九个女人无法在一个月内生出一个孩子，所以这30倍的并行劳动增加将转化为远小于30倍的实际进展增加；但它仍然有帮助。假设在这种情况下用于实验的算力将是瓶颈，那么拥有30倍更多的科研劳动仍有一些方式可以帮助缓解这一瓶颈，例如：</li>
+<li>在实验运行时观察它们，辩论其含义，并在「开始下一个实验」显得比「继续观察学习曲线增长」更有价值时立即停止它们。</li>
+<li>在每个实验的设计上投入30倍的思考，确保它不仅无bug，而且无混杂因素、检验的是正确的假设等等。</li>
+<li>让更多更好的思考投入到分析每个实验并决定下一步优先事项上。</li>
+<li>迅速推进技术树上所有不涉及昂贵实验的部分，例如ML理论、可解释性、评测……</li>
+</ul><h2 id="sec-157" class="chap">总体上，我们估计这30倍的并行劳动因素会把事情加速3倍（90%置信区间：1.5到6）。</h2>
+<p>另一个要去掉的简化是，AI不再是所有能力参差不齐的人类员工的数字副本。SAR按定义将与最优秀的科学家和工程师一样出色。所以平均能力水平将上升到最高能力水平。</p>
+<ul><li>我们自己做了一个小型调查来获取关于这一点的信息——具体来说，在2024年11月到2025年3月间，我们调查了一些目前或曾经在OpenAI和Google DeepMind担任研究者或工程师的朋友。我们问（转述）：「如果你公司里每个人都和最优秀的人一样出色，相比每个人都和（你公司的）中位数一样，研究会快多少？」在看到他们的回答之前我们的估计是快4倍；回答的中位数是6.25倍（n=8）。</li>
+</ul><p>我们的估计是，从当今的分布转变为让所有研究者都达到最优秀者的水平，捕获了「从全是中位数研究者到全是最优秀研究者」这一转变所带来加速的一半。所以我们估计这一因素带来的整体加速约为2.5倍（90%置信区间：1.25到5）。</p>
+<ul><li>还剩一个因素：多样性损失。「把你所有研究者都提升到最优秀者的水平」优于「把你所有研究者都变成最优秀者的副本」，因为任何个体都可能有其他人所没有的盲点或弱点。SAR大多是彼此的副本，所以这个问题的影响可能比在人类研究组织中更严重——后者仅凭拥有多名员工就天然带有一定程度的多样性。我们认为这可能很重要，但不确定性很高。我们大胆猜测这会把整体研究速度乘以0.28倍到0.95倍。</li>
+</ul><p>把所有这些数字组合起来，我们得到SAR带来的总倍增器为26（90%置信区间：8到139）。</p>
+<p>方法3：更直接的调查</p>
+<ul><li>一份近期报告于2024年3月调查了五位前沿AI公司现任或前任员工，请他们参与以下这个恰好与我们的相当类似的假设情景：</li>
+<li>「设想可用于实验和训练的算力基本上以过去几年的增长速率持续增长，但现在有一个大不同：你公司里每个人都有30个由AI驱动、以30倍速度工作的副本……现在让我们从非常宏观的层面来看，你认为前沿实验室AI能力进展的整体步伐相比当前会是怎样？」</li>
+<li>结果从约1.5倍到20倍不等，对数均值约为5倍。我们把它表示为一个中位数约5、90%置信区间1.25到20的对数正态分布。</li>
+<li>该调查与SAR进展倍增器之间有2处差异：</li>
+</ul><p>该调查问的是整体AI进展，而我们聚焦于软件进展：因此我们乘以2倍，因为当前进展中约有一半来自训练算力，这意味着在进展倍增器较高时，整体进展加速约为软件进展加速的½。</p>
+<ul><li>该调查问的是制作每位研究者的副本，而SAR与最优秀研究者一样能干：2.5（90%置信区间：1.25到5）。</li>
+<li>这给出24（90%置信区间：5到112）的结果。</li>
+<li>这些研究者还被问到了更具体的问题，例如具体来自「能够在运行实验前可靠地调试实验」「能够更好地分配优先级资源」「能够在可能时以更小规模做实验」「能够运行更花哨的实验」等方面的加速。也许并不令人意外的是——考虑到其中涉及的巨大不确定性以及对此思考所花时间之少——他们给出的各单项加速数字相乘后得到的结果，明显高于他们直接给出的答案（各单项加速相乘的对数均值为14）。</li>
+</ul><p>从SIAR到ASI</p>
+<ul><li>现在我们已达到一个超级智能AI研究者。那么，还要多久才能达到人工超级智能（ASI）：一个在每一项认知任务上都胜过最优秀人类专家的AI系统，其胜过程度是最优秀人类专家相对中位数人类专家程度的2倍（面向整个领域，而非像SAR那样面向单个公司）。</li>
+</ul><h2 id="sec-174" class="chap">Appendix E: What do today’s AIs think?</h2>
+<p>关于实验选择的看法</p>
+<p>鉴于若没有改进的实验选择（即研究品味），我们会因硬件和延迟瓶颈而遭遇急剧的收益递减，因此预测超出人类范围的实验选择改进相当重要。</p>
+<h3 id="sec-177" class="chap">我们进一步的进展倍增器预测，受关于实验选择的两个关键看法的影响：</h3>
+<ul><li>人类差异巨大：即便在中位数与顶尖AGI公司员工之间，实验选择能力也存在相当大的差异，正如我们的研究者调查所证明的——它发现全是中位数员工的公司与全是最优秀员工的公司之间，研究进展估计有6.25倍的差异，其中基于实验选择的差异为3.25倍。推理：观察并与AGI公司的研究者交流、上述调查，以及观察薪资差异。</li>
+<li>人类范围之上有很大的余量：对于处于智能极限的AI，在实验选择技能上高于顶尖人类的余量非常大（仅基于实验选择而非实现，就有&gt;=1000倍的差异）。推理：我们在人类范围的顶端并未看到急剧的收益递减，我们也没有理由相信人类接近通用智能的极限。</li>
+<li>从SIAR到ASI的仅靠人类的时间线</li>
+<li>我将相对于上文所预测的仅靠人类从SAR跨越到SIAR所需时间来思考这个问题。</li>
+<li>SIAR与ASI之间有2段差距要跨越：</li>
+<li>在面向整个领域而非单个公司时，达到高于最优秀人类2个（中位数→最优秀的跃升）的水平：略小于一次SAR→SIAR的跃升。就AI研发而言，我猜这需要的跃升略小于SAR→SIAR，因为中位数ML专业人士比最差的AGI公司研究者稍好一些（如果那位较差的研究者低于中位数的程度，与中位数低于最优秀者的程度相同的话；而由于招聘门槛，这在实践中可能并不成立）。</li>
+<li>在所有认知任务而非仅AI研发上达到ASI：约为SAR→SIAR跃升的一半。我认为一旦AI在AI研发上极其出色，这些技能中的许多都会迁移到其他领域，所以它不必强出太多就能泛化到所有领域，尤其是如果在为教授通用技能而设计的环境中训练的话。</li>
+<li>同样使用我在SAR到SIAR中所用的Davidson式收益递减函数，我随后通过以下方式对从SIAR到ASI所需时间建模：</li>
+<li>得出直到SAR为止的仅靠人类年数总存量，以及借助SAR到SIAR预测的结果得出SAR与SIAR之间的年数。</li>
+<li>SIAR到ASI的仅靠人类、仅靠软件时间由以下方式确定：抽取从SIAR到ASI所需的、以SAR-到-SIAR为当量的跃升数：中位数1.5次跃升（80%置信区间：0.3到7.5；对数正态）。我把它从1.25向上修正，因为预期r会上升。使用与SAR到SIAR相同的公式结构来计算预测分布。</li>
+<li>这得出95年的预测中位数（80%置信区间：2.4到1,000,000）。我们认为第90百分位可能太高，不过请记住这是仅靠软件的改进，所以至少可以想象在达到ASI之前，在训练算力不增加的情况下，这些改进会大幅放缓。</li>
+<li>SIAR会将AI研发加速约250倍</li>
+<li>我们调查的中位数显示，从全是中位数研究者切换到全是顶尖研究者，会带来约6.5倍的算法进展速度提升。当只考虑「研究品味」而非工程时，中位数是3.25，而这可能更相关，因为一旦我们进入超人类自动化研究者阶段，我们可能会强烈受制于非工程任务的瓶颈。我们姑且说，一旦超过SAR，这个倍增器大约是3.25。</li>
+<li>按定义，从SAR到SIAR就像2次这样的跃升，所以是3.25^2，约为进展倍增器的10倍增加。这给出250倍的进展倍增器。</li>
+<li>ASI会将AI研发加速约2,000倍</li>
+<li>上文我们估计，在不因「被削减」而向下修正的情况下，从SAR到SIAR会涉及中位数1.25次以SAR-到-SIAR为当量的跃升。这天真地会得出进展倍增器10^1.25倍的增加。然而，我们应当因r下降而向下修正，姑且修正为在SAR基础上的8倍，粗略估计为2,000倍。</li>
+<li>相关工作</li>
+<li>Davidson的《以算力为中心的框架对起飞速度的启示》</li>
+<li>这份由 Tom Davidson 于2023年撰写的报告利用经济建模来预测AI起飞动态（描述、演练场）。该主模型并非设计来预测AI研发一旦完全自动化后会发生什么，例如从SAR到SIAR的过渡。预测完全自动化之后情况的那一节，推算出65%的概率会出现软件驱动的奇点，若发生，在中位数情形下会导致有效算力增加2-3个数量级。在即将发表的工作中，Davidson推算在完全自动化AI研发时，有50%的概率把3年的正常AI进展（按Davidson的计算，大致是3-4个数量级的有效算力）压缩进1年。</li>
+<li>虽然我们主要并没有以「正常年份进展的数量级」来思考，但如果我们使用SAR→SIAR一节中讨论的Davidson式收益递减模型，我们可以反推出，我们对「r」（软件进展中努力增加所带来的收益率）的中位数值是4（如「情形1：5」中所讨论）。Davidson在2022年的最佳猜测是r=2，在更近期即将发表的工作中他的估计现在是1.2。r大于1意味着AI智能的每次提升都在随时间而变得越来越快，而随着我们接近智能极限，r会随时间下降。我们注意到Davidson的预期与我们的有显著重叠：例如r=2就在我们各自不确定性的边界之内。</li>
+<li>我们在r上的分歧主要归结于关于如何计入向新能力跃升的直觉。Davidson主要通过测量效率改进来估计r：例如看2025年的算法要达到2015年AI的性能，所需的训练算力少了多少。然而，我们还需要计入能力改进：在固定训练算力阈值下AI能力的改进。这些可以被看作是「向上」测量而非向下测量的效率改进：例如看2015年的算法要达到2025年的性能，比2025年的算法多需要多少训练算力。然而，这些更难测量。</li>
+<li>当向上测量时，人们可能得到高得多的r估计：算法可能对定性上的新能力扩展性很差。想想，即便 Magnus Carlsen 研究象棋研究了数十亿年，他也永远不会像顶级计算机国际象棋引擎那么强（如果他都不行，那更典型的人类肯定也不行）。随着算法改进足够大，甚至可能有实际上无穷多次的定性跃升。</li>
+<li>Davidson把r乘以2，以计入在固定算力水平下能力的改进，也就是我们所说的向上测量。我们认为乘以2不足以应对因解锁新能力层级而带来的定性上的巨大收益（最终很可能达到以往训练方法在无限算力/数据下都永远无法达到的能力层级）。</li>
+</ul><p>关于这一问题，在Eli撰写的一份未发表草稿中有进一步讨论，此处。该草稿还包含关于Davidson模型其他问题的章节。</p>
+<ul><li>我们总体上对像本草稿这样对具体能力层级建模持乐观态度，将其作为对拟合过往数据的经济建模的一种补充。我们对过度依赖数学模型来预测定性性能变化持谨慎态度，尽管我们认为它们仍然很有信息价值。</li>
+<li>另见此处对软件为主的智能爆炸的一种设想及其可能性的讨论。</li>
+</ul><p>GATE</p>
+<h3 id="sec-205" class="chap">GATE是Epoch近期发布的一个模型，它在Davidson模型的基础上构建了一个更聚焦于广泛经济自动化的版本（情景浏览器、论文）。与Davidson一样，他们并不宣称自己的模型对临近或完成完全自动化之后会发生什么能做出好的预测。</h3>
+<p>他们做出的、与潜在的软件驱动智能爆炸相关的主要改动是，把投资（即来自全球总产出GWP的一部分分配）作为AI软件研发的驱动力，而不允许改进的软件效率直接被用于进一步的研发。这导致了不那么激进的起飞预测，尽管其时间线要稍快一些。</p>
+<div class="tablewrap"><table><tr><th>Hypothesis</th><th>Credence</th><th>Reasoning</th></tr><tr><td>Hypothesis 1: Written goal specifications</td><td>30%</td><td>While efforts are being made to explicitly specify AI goals, it is difficult to ensure that these specifications are complete and accurate.</td></tr><tr><td>Hypothesis 2: Developer-intended goals</td><td>20%</td><td>Developers may have implicit goals that are not explicitly stated, and these goals could influence the AI system&#x27;s behavior.</td></tr><tr><td>Hypothesis 3: Unintended version of written goals and/or human intentions</td><td>40%</td><td>This is a significant risk, as AI systems may interpret goals in unexpected ways or develop unintended goals as a result of their training.</td></tr><tr><td>Hypothesis 4: Reward/reinforcement</td><td>60%</td><td>Reward/reinforcement learning is a powerful method for training AI systems, but it can also lead to unintended consequences if the reward function is not carefully designed.</td></tr><tr><td>Hypothesis 5: Proxies and/or instrumentally convergent goals</td><td>70%</td><td>AI systems are likely to develop proxy goals and instrumentally convergent goals as they learn and adapt to their environment.</td></tr><tr><td>Hypothesis 6: Other goals</td><td>10%</td><td>There is always the possibility of unforeseen and unpredictable goals emerging, especially as AI systems become more complex and sophisticated.</td></tr></table></div>
+<p>对研发价值的经济估计通常发现，它解释了约20%的劳动生产率增长，其余大部分由每小时劳动的资本增加（资本深化）来解释。我们的回应：AI所产生价值的大部分最终归于非研发领域，这似乎是有可能的。但我们认为研发仍将在很短的时间内解锁巨大的能力。</p>
+<h3 id="sec-209" class="chap">AI研发自动化并非特例：一旦计入对实验算力和数据的依赖，r很可能低于或接近1，而即便它一开始高于1，在软件驱动的智能爆炸开始后不久很可能会下降到1以下，导致不到10倍的效率改进。我们的回应：如上一节所讨论，我们对r的估计更高。我们同意这些其他考量需要被纳入，但认为r很可能仍将显著高于1。Davidson在此处讨论了对实验算力的需求。</h3>
+<p>自动化AI研发需要一套广泛的能力，或许会在通用劳动之后才被自动化。我们的回应：我们同意AI研发需要一套会迁移到其他领域的广泛能力。然而，我们认为它在实践中会较早被自动化，因为（a）存在优先自动化它的激励，（b）数据易于获取，以及（c）它依赖认知技能。我们还可以观察到，编码迄今一直是最容易被自动化的工作之一。</p>
+<p>此外，在Epoch的默认情形中，他们把相对于今天的最大软件效率设为10,000，我们认为这远远太低。在Davidson的模型中，该参数默认设为1e12。</p>
+<p>回应常见反对意见</p>
+<p>上文我们对AI里程碑何时达成及其含义做了相对机制化的分析，并得出结论：很可能会出现一场「软件驱动的智能爆炸」——即由于在固定硬件供给下的AI软件进展，我们最有可能在一年内从超人类编码者走到超级智能AI。如果我们允许一些硬件增加，即一场软件「为主」的智能爆炸，这就更有可能了。</p>
+<p>下面我们回应关于（a）如此快速进展的可能性以及（b）如此快速进展之后果的一些常见反对意见。</p>
+<p>阿姆达尔定律</p>
+<p>我们听到一些人提出这样的论点：由于自动化对研发的某些方面（例如收集人类数据）只能加速那么多，进展会受制于这些任务，从而导致进展倍增器不大（见阿姆达尔定律）。</p>
+<p>具体来说，他们的论证大致是：任务X目前占用研究者在AI软件研发中10%的时间。因此，如果它不被自动化加速，AI软件研发就无法被加速超过10倍。</p>
+<p>虽然这有几分道理，但该主张不成立，因为完成当前AI软件研发子任务的速度并不约束整个过程的速度。</p>
+<p>要理解为何这在概念上是错误的，设想一个理论上的AI，它具有非常超人类的实验选择能力，但实验实现技能却低于人类。即便自动化根本没有加速AI实验的实现、且实现一开始占用研究者50%的时间，只要自动化带来了所选实验大幅改善，就能实现&gt;2倍的AI研发进展倍增器。</p>
+<p>关于这类瓶颈在实践中会在多大程度上存在：就收集人类数据而言，我们认为合成数据很可能会缓解这一瓶颈。此外，我们上文已论证过，改进的实验选择很可能有很高的上限，而只要能选出价值高N倍的实验，这就会把进展倍增器乘以N倍，无论研究过程的其余部分如何。</p>
+<p>算力是AI进展的主导驱动力</p>
+<p>这受到了 Steven Byrnes 的工作（见此）以及 Plato 的《理想国》（The Republic）的启发。</p>
+<p>关于这一点有很多可说的。首先，我们要指出，我们同意算力既是（a）整体AI进展的一个重要驱动力，也（b）对实验很重要。我们在预测中把这些瓶颈纳入了考量，但有些人在这些瓶颈影响有多严重这一点上与我们意见不同。</p>
+<p>鉴于上文讨论AI研发进展倍增器的各节已在一定程度上回应了这个问题，我们在此仅指出几条论据，说明我们为何有更激进的预测：</p>
+<p>一项对若干前沿AI研究者的调查得出的估计是，在固定算力预算下，如果公司只有中位数研究者的副本、而非最优秀研究者，算法进展的步伐会有约6倍的差异。</p>
+    
+    <div class="footer">
+      本页为 <a href="https://ai-2027.com" target="_blank" rel="noopener">ai-2027.com</a> 的非官方中文全文译本，仅供学习交流。原文版权归原作者所有。译文如有出入，请以英文原文为准。<br>
+      情景推演 · AI Futures Project · 中文重制版
+    </div>
+  </main>
+</div>
+</body>
+</html>

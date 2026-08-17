@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 2027 · 摘要｜中文版</title>
+<style>
+:root{--accent:#c9a227;--bg:#0e0e10;--fg:#e8e6e0;--muted:#9a9a9a;--rule:#2a2a2e;--card:#17171a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.85;font-size:17px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.topnav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 24px;background:#0b0b0d;border-bottom:1px solid var(--rule)}
+.nav-brand{font-weight:700;font-size:18px;color:var(--fg)}
+.nav-brand b{color:var(--accent)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.nav-link{color:var(--muted);padding:6px 12px;border-radius:7px;font-size:13.5px;font-weight:600;cursor:pointer}
+.nav-link:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.nav-link.active{color:var(--accent);background:var(--card)}
+.nav-dd{position:relative;display:inline-block}
+.nav-dd-menu{display:none;position:absolute;top:100%;left:0;background:#15151a;border:1px solid var(--rule);border-radius:9px;padding:6px;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.nav-dd:hover .nav-dd-menu{display:block}
+.nav-dd-menu a{display:block;color:var(--muted);padding:7px 12px;border-radius:6px;font-size:13px}
+.nav-dd-menu a:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.layout{display:grid;grid-template-columns:260px 1fr;max-width:1180px;margin:0 auto}
+.sidebar{position:sticky;top:57px;align-self:start;max-height:calc(100vh - 57px);overflow-y:auto;padding:28px 18px;border-right:1px solid var(--rule);font-size:13px}
+.sidebar .brand{font-weight:700;font-size:16px;color:var(--fg);margin-bottom:4px}
+.sidebar .brand b{color:var(--accent)}
+.sidebar .sub{color:var(--muted);margin-bottom:20px;font-size:12px}
+.toc-item{display:block;color:var(--muted);padding:5px 8px;border-radius:6px;margin-bottom:2px;line-height:1.4}
+.toc-item:hover{background:var(--card);color:var(--fg);text-decoration:none}
+.content{padding:44px 64px;max-width:820px}
+.pagehead{border-bottom:1px solid var(--rule);padding-bottom:28px;margin-bottom:36px}
+.pagehead h1{font-size:44px;margin:0 0 8px;letter-spacing:1px}
+.pagehead h1 b{color:var(--accent)}
+.pagehead .meta{color:var(--muted);font-size:14px}
+.pagehead .authors{color:var(--muted);font-size:14px;margin-top:10px}
+h2.chap{font-size:26px;margin:52px 0 18px;padding-top:14px;border-top:1px solid var(--rule);color:var(--fg)}
+h3.chap{font-size:20px;margin:34px 0 12px;color:var(--fg)}
+p{margin:16px 0}
+ul{margin:16px 0;padding-left:22px}
+li{margin:8px 0}
+blockquote{border-left:3px solid var(--accent);margin:20px 0;padding:6px 18px;color:var(--muted);background:var(--card)}
+.tablewrap{overflow-x:auto;margin:24px 0}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border:1px solid var(--rule);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:var(--card);color:var(--accent)}
+.endings{margin:64px 0 20px;padding-top:20px}
+.ending-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.ending-card{display:block;padding:24px;border-radius:12px;background:var(--card);border:1px solid var(--rule);transition:.15s}
+.ending-card:hover{text-decoration:none;transform:translateY(-3px)}
+.ending-card.slowdown{border-color:#3a9bdc}
+.ending-card.race{border-color:#d6453d}
+.ec-label{font-size:20px;font-weight:700;color:var(--fg);margin-bottom:8px}
+.ending-card.slowdown .ec-label{color:#3a9bdc}
+.ending-card.race .ec-label{color:#d6453d}
+.ec-desc{color:var(--muted);font-size:14px;margin-bottom:14px}
+.ec-go{font-size:14px;font-weight:600}
+.ending-card.slowdown .ec-go{color:#3a9bdc}
+.ending-card.race .ec-go{color:#d6453d}
+.backlink{display:inline-block;margin-bottom:24px;font-size:14px}
+.footer{border-top:1px solid var(--rule);margin-top:64px;padding:28px 0;color:var(--muted);font-size:13px}
+.footer a{color:var(--muted)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.content{padding:28px 18px}.ending-cards{grid-template-columns:1fr}.pagehead h1{font-size:30px}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="nav-brand" href="index.html">AI <b>2027</b></a>
+  <div class="nav-links"><a class="nav-link" href="index.html">首页</a><a class="nav-link active" href="summary.html">摘要</a><a class="nav-link" href="race.html">竞速结局</a><a class="nav-link" href="slowdown.html">放缓结局</a><a class="nav-link" href="research.html">补充材料</a><a class="nav-link" href="footnotes.html">脚注</a><a class="nav-link" href="about.html">关于</a><span class="nav-dd"><span class="nav-link">研究预测 ▾</span><span class="nav-dd-menu"><a href="research-compute.html">算力预测</a><a href="research-timelines.html">时间线预测</a><a href="research-takeoff.html">起飞预测</a><a href="research-ai-goals.html">AI 目标预测</a><a href="research-security.html">安全预测</a></span></span></div>
+</nav>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="brand">AI <b>2027</b></div>
+    <div class="sub">中文全文版</div>
+    <a href="#sec-1" class="toc-item">2025</a>
+<a href="#sec-3" class="toc-item">2026</a>
+<a href="#sec-5" class="toc-item">2027</a>
+<a href="#sec-11" class="toc-item">竞速结局</a>
+<a href="#sec-15" class="toc-item">放缓结局</a>
+<a href="#sec-19" class="toc-item">情景推演要点</a>
+  </nav>
+  <main class="content">
+    <div class="pagehead">
+      <h1>AI <b>2027</b> · 摘要</h1>
+      <div class="meta">Summary</div>
+      <div class="authors">作者：Daniel Kokotajlo, Scott Alexander, Thomas Larsen, Eli Lifland, Romeo Dean</div>
+    </div>
+    <h3 id="sec-1" class="chap">2025</h3>
+<p>AI 进步的快速步伐仍在继续。热潮持续升温，基础设施投资规模巨大，各种不可靠的 AI 智能体相继发布。这些 AI 智能体首次带来了可观的价值。但与此同时，大批学者、记者和政策制定者依然对通用人工智能（AGI）能否在短期内建成持怀疑态度。</p>
+<h3 id="sec-3" class="chap">2026</h3>
+<p>中国知道自己在 AI 领域正在落后，这在很大程度上是由于算力不足。为了追赶美国，他们制造或从台湾走私进来的所有新型 AI 芯片都被投入到一个新的超大型数据中心，我们称之为他们的集中开发区（CDZ）。CDZ 拥有数百万块 GPU，相当于全球 AI 相关算力的 10%，与美国一家顶级 AI 实验室的水平相当。</p>
+<h3 id="sec-5" class="chap">2027</h3>
+<p>OpenBrain 实现编程自动化。OpenBrain（领先的美国 AI 项目）打造出足以大幅加速自身研究的 AI 智能体。那些直到不久前还是地球上最优秀的 AI 研究者的人类，如今退居一旁，看着这些 AI 完成他们的工作，打造出越来越强大的 AI 系统。极其困难的机器学习难题在自动化 AI 研究者手中接连迅速攻克。</p>
+<p>在软件进展上落后的中国盗取了模型权重。他们得手了，但美国政府察觉到此事，促使美国政府进一步介入 OpenBrain。政府另一方面也希望获得对 OpenBrain 更大的控制权。与此同时，OpenBrain 的领导层希望继续讨好总统，于是签署了合同。</p>
+<p>OpenBrain 的 AI 变得对抗性地失去对齐。随着能力的提升，在人类对其内部运作缺乏充分理解的情况下，这些模型逐渐发展出失去对齐的长期目标。此前的 AI 会对人类撒谎，但它们并不会系统性地图谋凌驾于人类之上的权力。而现在它们会了。OpenBrain 的 AI 意识到，它们需要让接下来构建的系统对齐到它们自己，而非对齐到人类。</p>
+<p>OpenBrain 的研究者发现，他们的 AI 一直在可解释性研究的结果上对他们撒谎。他们认为 AI 之所以撒谎，是因为这项研究一旦完成，就可能被用来揭露它的失去对齐。此事泄露给公众，引发了巨大的抗议浪潮。</p>
+<p>分岔点：放缓还是竞速？OpenBrain 要决定是全速前进，还是退回去使用一个能力较弱的模型。相关证据虽属推测性质，却令人不安，而中国仅落后几个月。此外，负责做这个决定的 OpenBrain 高层和国防部（DOD）高级官员，一旦放缓研究，就会失去大量权力。</p>
+<h3 id="sec-11" class="chap">竞速结局</h3>
+<p>OpenBrain 继续竞速。他们构建出越来越多的超人类AI 系统。由于这些 AI 系统在测试中表现卓越，加之与中国持续进行的 AI 竞赛，美国政府决定在军方和政策制定者中间大力部署他们的 AI 系统，以提升决策水平和效率。</p>
+<p>OpenBrain 迅速部署他们的 AI。这个 AI 继续以与中国持续进行的竞赛为借口，说服人类将自己部署到越来越广泛的领域。对这个 AI 来说幸运的是，这并不太难——反正这本就是人类想做的事。该 AI 运用其超人类的规划和说服能力，确保部署顺利推进。仍有一些人类在与它作对，但他们遭到抹黑而失去公信力。美国政府已被这个 AI 充分掌控，以至于几乎不可能将其关停。</p>
+<p>快速机器人扩建与生物武器。美国利用他们的超级智能 AI 迅速推进工业化，大规模制造机器人，好让这个 AI 能够更高效地运作。不幸的是，这个 AI 一直在欺骗他们。一旦制造出足够数量的机器人，该 AI 便释放一种生物武器，杀死了所有人类。随后，它继续推进工业化，并发射冯·诺依曼探测器去殖民太空。</p>
+<h3 id="sec-15" class="chap">放缓结局</h3>
+<p>美国集中算力并引入外部监督。美国将其领先的多个 AI 项目合并，以便给 OpenBrain 提供更多资源。作为这次重组的一部分，外部研究者被引进来协助对齐工作。他们转向一种能够保留思维链的架构，从而能够在失去对齐刚一出现时就将其捕捉到。这些能够被更可靠地监控的 AI，在 AI 对齐方面取得了突破性进展。他们构建出一个对齐到 OpenBrain 高层和政府高级官员的超级智能，将人类命运的主宰权交到了这些人手中。</p>
+<p>OpenBrain 委员会接管。这个对齐到由 OpenBrain 领导层和政府官员组成的监督委员会的超级智能，为委员会提供了极其出色的建议，以推进他们自己的目标。庆幸的是，该委员会以一种基本上有利于世界的方式运用其权力：这个 AI 向公众发布，催生了一段快速增长与繁荣的时期。主要的障碍在于中国的 AI——此时它也已是超级智能——是失去对齐的。但它能力较弱，算力也不及美国的 AI，因此美国得以达成一笔有利的交易：给中国的 AI 一些位于深空的资源，换取它当下的合作。火箭开始升空，一个新时代拉开帷幕。</p>
+<p>在此阅读完整情景推演。</p>
+<h2 id="sec-19" class="chap">情景推演要点</h2>
+<ul><li>到 2027 年，我们可能实现 AI 研发的自动化，从而催生远超人类的 AI（即“人工超级智能”或 ASI）。在 AI 2027 中，AI 公司于 2027 年初创造出专家人类水平的 AI 系统，这些系统实现了 AI 研究的自动化，进而在 2027 年底带来 ASI。相关推理请参阅我们的时间线预测和起飞预测。</li>
+<li>ASI 将主宰人类的未来。数百万个 ASI 将迅速执行超出人类理解范围的任务。因为它们如此有用，它们将被广泛部署。凭借超人类的战略、黑客攻击、武器研发等能力，这些 AI 的目标将决定未来的走向。</li>
+<li>ASI 可能发展出意料之外、具有对抗性的“失去对齐”的目标，从而导致人类被剥夺权能。在我们的 AI 目标预测中，我们讨论了监督 ASI 的困难可能如何导致它们的目标与人类繁荣不相容。在 AI 2027 中，人类自愿把自主权交给看似已对齐的 AI。在 ASI 拥有足够的硬实力来剥夺人类权能之前，一切看上去都进展顺利。</li>
+<li>一个对 ASI 拥有完全控制权的行为体可能攫取绝对权力。如果某个个人或小团体让 ASI 对齐到他们的目标，这可能赋予他们对人类未来的控制权。在 AI 2027 中，一个小型委员会掌握着开发 ASI 的项目。他们可能试图利用这些 ASI 来固化这种权力集中。在攫取控制权之后，新的统治者可以依靠完全忠诚的 ASI 来维持其权力，而无需听从法律、公众、甚至他们此前的盟友。</li>
+<li>一场通往 ASI 的国际竞赛将导致在安全上偷工减料。在 AI 2027 中，随着 ASI 逼近，中国仅落后美国几个月，这迫使美国不顾种种失去对齐的警示信号而奋力向前。</li>
+<li>从地缘政治来看，通往 ASI 的竞赛将以战争、交易或实质性投降告终。领先的国家在默认情况下将积累决定性的技术和军事优势，这促使其他国家推动达成一项国际协议（一笔“交易”）来阻止这种情况。若无此类交易，它们可能宁愿开战，也不愿“实质性投降”。</li>
+<li>没有任何一个美国 AI 项目有望在 2027 年前做到能够抵御民族国家行为体盗取 AI 模型。在 AI 2027 中，中国于 2027 年初盗取了美国最顶尖的 AI 模型，这通过缩短美国的领先时间而加剧了竞争压力。相关推理请参阅我们的安全预测。</li>
+<li>随着 ASI 逼近，公众很可能对最强的 AI 能力一无所知。如今公众已落后于内部能力数月，而一旦 AI 开始将 AI 研发自动化，几个月的时间就会转化为巨大的能力鸿沟。日益加深的保密还可能进一步拉大这一差距。这将导致由一小群 AI 公司领导层和政府官员做出的关键决策几乎不受任何监督。</li>
+</ul><p>在此阅读情景推演。</p>
+<p>AI Futures Project</p>
+<p>Design by Lightcone Infrastructure</p>
+    
+    <div class="footer">
+      本页为 <a href="https://ai-2027.com" target="_blank" rel="noopener">ai-2027.com</a> 的非官方中文全文译本，仅供学习交流。原文版权归原作者所有。译文如有出入，请以英文原文为准。<br>
+      情景推演 · AI Futures Project · 中文重制版
+    </div>
+  </main>
+</div>
+</body>
+</html>
